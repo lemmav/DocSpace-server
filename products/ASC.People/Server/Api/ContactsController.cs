@@ -47,7 +47,7 @@ public class ContactsController(UserManager userManager,
     /// <returns type="ASC.Web.Api.Models.EmployeeFullDto, ASC.Web.Api">Deleted user profile with the detailed information</returns>
     /// <path>api/2.0/people/{userid}/contacts</path>
     /// <httpMethod>DELETE</httpMethod>
-    [HttpDelete("{userid}/contacts")]
+    [HttpDelete("{userid}/contacts", Name = "deleteMemberContacts")]
     public async Task<EmployeeFullDto> DeleteMemberContacts(string userid, UpdateMemberRequestDto inDto)
     {
         var user = await GetUserInfoAsync(userid);
@@ -75,7 +75,7 @@ public class ContactsController(UserManager userManager,
     /// <returns type="ASC.Web.Api.Models.EmployeeFullDto, ASC.Web.Api">Updated user profile with the detailed information</returns>
     /// <path>api/2.0/people/{userid}/contacts</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("{userid}/contacts")]
+    [HttpPost("{userid}/contacts", Name = "setMemberContacts")]
     public async Task<EmployeeFullDto> SetMemberContacts(string userid, UpdateMemberRequestDto inDto)
     {
         var user = await GetUserInfoAsync(userid);
@@ -104,7 +104,7 @@ public class ContactsController(UserManager userManager,
     /// <returns type="ASC.Web.Api.Models.EmployeeFullDto, ASC.Web.Api">Updated user profile with the detailed information</returns>
     /// <path>api/2.0/people/{userid}/contacts</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("{userid}/contacts")]
+    [HttpPut("{userid}/contacts", Name = "updateMemberContacts")]
     public async Task<EmployeeFullDto> UpdateMemberContacts(string userid, UpdateMemberRequestDto inDto)
     {
         var user = await GetUserInfoAsync(userid);

@@ -50,7 +50,7 @@ public class SsoController(TenantManager tenantManager,
     /// <returns type="ASC.Web.Studio.UserControls.Management.SingleSignOnSettings.SsoSettingsV2, ASC.Web.Core">SSO settings</returns>
     /// <path>api/2.0/settings/ssov2</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("")]
+    [HttpGet("", Name = "getSsoSettingsV2")]
     [AllowAnonymous, AllowNotPayment]
     public async Task<SsoSettingsV2> GetSsoSettingsV2()
     {
@@ -95,7 +95,7 @@ public class SsoController(TenantManager tenantManager,
     /// <returns type="ASC.Web.Studio.UserControls.Management.SingleSignOnSettings.SsoSettingsV2, ASC.Web.Core">Default SSO settings</returns>
     /// <path>api/2.0/settings/ssov2/default</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("default")]
+    [HttpGet("default", Name = "getDefaultSsoSettingsV2")]
     public async Task<SsoSettingsV2> GetDefaultSsoSettingsV2Async()
     {
         await CheckSsoPermissionsAsync();
@@ -112,7 +112,7 @@ public class SsoController(TenantManager tenantManager,
     /// <returns type="System.Object, System">The SSO settings constants: SSO name ID format type, SSO binding type, SSO signing algorithm type, SSO SP certificate action type, SSO IDP certificate action type</returns>
     /// <path>api/2.0/settings/ssov2/constants</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("constants")]
+    [HttpGet("constants", Name = "getSsoSettingsV2Constants")]
     public object GetSsoSettingsV2Constants()
     {
         return new
@@ -137,7 +137,7 @@ public class SsoController(TenantManager tenantManager,
     /// <returns type="ASC.Web.Studio.UserControls.Management.SingleSignOnSettings.SsoSettingsV2, ASC.Web.Core">SSO settings</returns>
     /// <path>api/2.0/settings/ssov2</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("")]
+    [HttpPost("", Name = "saveSsoSettingsV2")]
     public async Task<SsoSettingsV2> SaveSsoSettingsV2Async(SsoSettingsRequestsDto inDto)
     {
         await CheckSsoPermissionsAsync();
@@ -221,7 +221,7 @@ public class SsoController(TenantManager tenantManager,
     /// <returns type="ASC.Web.Studio.UserControls.Management.SingleSignOnSettings.SsoSettingsV2, ASC.Web.Core">Default SSO settings</returns>
     /// <path>api/2.0/settings/ssov2</path>
     /// <httpMethod>DELETE</httpMethod>
-    [HttpDelete("")]
+    [HttpDelete("", Name = "resetSsoSettingsV2")]
     public async Task<SsoSettingsV2> ResetSsoSettingsV2Async()
     {
         await CheckSsoPermissionsAsync();

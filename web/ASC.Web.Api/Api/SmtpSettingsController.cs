@@ -52,7 +52,7 @@ public class SmtpSettingsController(
     /// <returns type="ASC.Web.Api.ApiModel.ResponseDto.SmtpSettingsDto, ASC.Web.Api">SMTP settings</returns>
     /// <path>api/2.0/smtpsettings/smtp</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("")]
+    [HttpGet("", Name = "getSmtpSettings")]
     public async Task<SmtpSettingsDto> GetSmtpSettingsAsync()
     {
         await CheckSmtpPermissionsAsync();
@@ -81,7 +81,7 @@ public class SmtpSettingsController(
     /// <returns type="ASC.Web.Api.ApiModel.ResponseDto.SmtpSettingsDto, ASC.Web.Api">SMTP settings</returns>
     /// <path>api/2.0/smtpsettings/smtp</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("")]
+    [HttpPost("", Name = "saveSmtpSettings")]
     public async Task<SmtpSettingsDto> SaveSmtpSettingsAsync(SmtpSettingsDto inDto)
     {
         ArgumentNullException.ThrowIfNull(inDto);
@@ -132,7 +132,7 @@ public class SmtpSettingsController(
     /// <returns type="ASC.Web.Api.ApiModel.ResponseDto.SmtpSettingsDto, ASC.Web.Api">Default SMTP settings</returns>
     /// <path>api/2.0/smtpsettings/smtp</path>
     /// <httpMethod>DELETE</httpMethod>
-    [HttpDelete("")]
+    [HttpDelete("", Name = "resetSmtpSettings")]
     public async Task<SmtpSettingsDto> ResetSmtpSettingsAsync()
     {
         await CheckSmtpPermissionsAsync();
@@ -165,7 +165,7 @@ public class SmtpSettingsController(
     // <returns type="ASC.Api.Settings.Smtp.SmtpOperationStatusRequestsDto, ASC.Web.Api">SMTP operation status</returns>
     // <path>api/2.0/smtpsettings/smtp/test</path>
     // <httpMethod>GET</httpMethod>
-    [HttpGet("test")]
+    [HttpGet("test", Name = "testSmtpSettings")]
     public async Task<SmtpOperationStatusRequestsDto> TestSmtpSettings()
     {
         await CheckSmtpPermissionsAsync();
@@ -189,7 +189,7 @@ public class SmtpSettingsController(
     // <returns type="ASC.Api.Settings.Smtp.SmtpOperationStatusRequestsDto, ASC.Web.Api">SMTP operation status</returns>
     // <path>api/2.0/smtpsettings/smtp/test/status</path>
     // <httpMethod>GET</httpMethod>
-    [HttpGet("test/status")]
+    [HttpGet("test/status", Name = "getSmtpOperationStatus")]
     public async Task<SmtpOperationStatusRequestsDto> GetSmtpOperationStatus()
     {
         await CheckSmtpPermissionsAsync();

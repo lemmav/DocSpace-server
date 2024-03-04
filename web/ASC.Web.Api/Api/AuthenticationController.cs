@@ -87,7 +87,7 @@ public class AuthenticationController(UserManager userManager,
     /// <path>api/2.0/authentication</path>
     /// <returns type="System.Boolean, System">Boolean value: true if the current user is authenticated</returns>
     [AllowNotPayment]
-    [HttpGet]
+    [HttpGet(Name = "isAuthentificated")]
     public bool GetIsAuthentificated()
     {
         return securityContext.IsAuthenticated;
@@ -104,7 +104,7 @@ public class AuthenticationController(UserManager userManager,
     /// <path>api/2.0/authentication/{code}</path>
     /// <returns type="ASC.Web.Api.ApiModel.ResponseDto.AuthenticationTokenDto, ASC.Web.Api">Authentication data</returns>
     [AllowNotPayment]
-    [HttpPost("{code}", Order = 1)]
+    [HttpPost("{code}", Order = 1, Name = "authenticateMeFromBodyWithCode")]
     public async Task<AuthenticationTokenDto> AuthenticateMeFromBodyWithCode(AuthRequestsDto inDto)
     {
         var tenant = (await tenantManager.GetCurrentTenantAsync()).Id;
@@ -177,7 +177,7 @@ public class AuthenticationController(UserManager userManager,
     /// <path>api/2.0/authentication</path>
     /// <returns type="ASC.Web.Api.ApiModel.ResponseDto.AuthenticationTokenDto, ASC.Web.Api">Authentication data</returns>
     [AllowNotPayment]
-    [HttpPost]
+    [HttpPost(Name = "authenticateMe")]
     public async Task<AuthenticationTokenDto> AuthenticateMeAsync(AuthRequestsDto inDto)
     {
         var wrapper = await GetUserAsync(inDto);
@@ -277,7 +277,7 @@ public class AuthenticationController(UserManager userManager,
     /// <path>api/2.0/authentication/logout</path>
     /// <returns></returns>
     [AllowNotPayment]
-    [HttpPost("logout")]
+    [HttpPost("logout", Name = "logout")]
     [HttpGet("logout")]// temp fix
     public async Task<object> LogoutAsync()
     {
@@ -326,7 +326,7 @@ public class AuthenticationController(UserManager userManager,
     /// <path>api/2.0/authentication/confirm</path>
     /// <returns type="ASC.Security.Cryptography.EmailValidationKeyProvider.ValidationResult, ASC.Security.Cryptography">Validation result: Ok, Invalid, or Expired</returns>
     [AllowNotPayment, AllowSuspended]
-    [HttpPost("confirm")]
+    [HttpPost("confirm", Name = "checkConfirm")]
     public async Task<ConfirmDto> CheckConfirm(EmailValidationKeyModel inDto)
     {
         if (string.IsNullOrEmpty(inDto.Key))
@@ -356,7 +356,7 @@ public class AuthenticationController(UserManager userManager,
     /// <returns type="ASC.Web.Api.ApiModel.ResponseDto.AuthenticationTokenDto, ASC.Web.Api">Authentication data</returns>
     [AllowNotPayment]
     [Authorize(AuthenticationSchemes = "confirm", Roles = "PhoneActivation")]
-    [HttpPost("setphone")]
+    [HttpPost("setphone", Name = "saveMobilePhone")]
     public async Task<AuthenticationTokenDto> SaveMobilePhoneAsync(MobileRequestsDto inDto)
     {
         await apiContext.AuthByClaimAsync();
@@ -383,7 +383,7 @@ public class AuthenticationController(UserManager userManager,
     /// <path>api/2.0/authentication/sendsms</path>
     /// <returns type="ASC.Web.Api.ApiModel.ResponseDto.AuthenticationTokenDto, ASC.Web.Api">Authentication data</returns>
     [AllowNotPayment]
-    [HttpPost("sendsms")]
+    [HttpPost("sendsms", Name = "sendSmsCode")]
     public async Task<AuthenticationTokenDto> SendSmsCodeAsync(AuthRequestsDto inDto)
     {
         var user = (await GetUserAsync(inDto)).UserInfo;

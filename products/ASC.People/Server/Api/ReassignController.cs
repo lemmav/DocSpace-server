@@ -46,7 +46,7 @@ public class ReassignController(
     /// <returns type="ASC.People.ApiModels.ResponseDto.TaskProgressResponseDto, ASC.People">Reassignment progress</returns>
     /// <path>api/2.0/people/reassign/progress/{userid}</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("progress/{userid:guid}")]
+    [HttpGet("progress/{userid:guid}", Name = "getReassignProgress")]
     public async Task<TaskProgressResponseDto> GetReassignProgressAsync(Guid userId)
     {
         await permissionContext.DemandPermissionsAsync(Constants.Action_EditUser);
@@ -66,7 +66,7 @@ public class ReassignController(
     /// <returns type="ASC.People.ApiModels.ResponseDto.TaskProgressResponseDto, ASC.People">Reassignment progress</returns>
     /// <path>api/2.0/people/reassign/start</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("start")]
+    [HttpPost("start", Name = "startReassign")]
     public async Task<TaskProgressResponseDto> StartReassignAsync(StartReassignRequestDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(Constants.Action_EditUser);
@@ -107,7 +107,7 @@ public class ReassignController(
     /// <path>api/2.0/people/reassign/terminate</path>
     /// <httpMethod>PUT</httpMethod>
     /// <returns></returns>
-    [HttpPut("terminate")]
+    [HttpPut("terminate", Name = "terminateReassign")]
     public async Task<TaskProgressResponseDto> TerminateReassignAsync(TerminateRequestDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(Constants.Action_EditUser);

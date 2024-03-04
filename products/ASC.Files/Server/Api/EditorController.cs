@@ -72,7 +72,7 @@ public class EditorControllerThirdparty(FileStorageService fileStorageService,
     /// <requiresAuthorization>false</requiresAuthorization>
     [AllowAnonymous]
     [AllowNotPayment]
-    [HttpGet("app-{fileId}/openedit")]
+    [HttpGet("app-{fileId}/openedit", Name = "openEditThirdParty")]
     public async Task<ConfigurationDto<string>> OpenEditThirdPartyAsync(string fileId)
     {
         fileId = "app-" + fileId;
@@ -135,7 +135,7 @@ public abstract class EditorController<T>(FileStorageService fileStorageService,
     /// <returns type="ASC.Files.Core.ApiModels.ResponseDto.FileDto, ASC.Files.Core">Saved file parameters</returns>
     /// <path>api/2.0/files/file/{fileId}/saveediting</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("{fileId}/saveediting")]
+    [HttpPut("{fileId}/saveediting", Name = "saveEditingFromForm")]
     public async Task<FileDto<T>> SaveEditingFromFormAsync(T fileId, [FromForm] SaveEditingRequestDto inDto)
     {
         await using var stream = httpContextAccessor.HttpContext.Request.Body;
@@ -153,7 +153,7 @@ public abstract class EditorController<T>(FileStorageService fileStorageService,
     /// <returns type="System.Object, System">File key for Document Service</returns>
     /// <path>api/2.0/files/file/{fileId}/startedit</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("{fileId}/startedit")]
+    [HttpPost("{fileId}/startedit", Name = "startEdit")]
     public async Task<object> StartEditAsync(T fileId, StartEditRequestDto inDto)
     {
         return await fileStorageService.StartEditAsync(fileId, inDto.EditingAlone, inDto.Doc);
@@ -172,7 +172,7 @@ public abstract class EditorController<T>(FileStorageService fileStorageService,
     /// <returns type="System.Collections.Generic.KeyValuePair{System.Boolean, System.String}, System.Collections.Generic">File changes</returns>
     /// <path>api/2.0/files/file/{fileId}/trackeditfile</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("{fileId}/trackeditfile")]
+    [HttpGet("{fileId}/trackeditfile", Name = "trackEditFile")]
     public async Task<KeyValuePair<bool, string>> TrackEditFileAsync(T fileId, Guid tabId, string docKeyForTrack, string doc, bool isFinish)
     {
         return await fileStorageService.TrackEditFileAsync(fileId, tabId, docKeyForTrack, doc, isFinish);
@@ -193,7 +193,7 @@ public abstract class EditorController<T>(FileStorageService fileStorageService,
     /// <httpMethod>GET</httpMethod>
     [AllowAnonymous]
     [AllowNotPayment]
-    [HttpGet("{fileId}/openedit")]
+    [HttpGet("{fileId}/openedit", Name = "openEdit")]
     public async Task<ConfigurationDto<T>> OpenEditAsync(T fileId, int version, string doc, bool view)
     {
         var docParams = await _documentServiceHelper.GetParamsAsync(fileId, version, doc, true, !view, true);
@@ -243,7 +243,7 @@ public abstract class EditorController<T>(FileStorageService fileStorageService,
     /// <returns type="ASC.Files.Core.Helpers.DocumentService.FileLink, ASC.Files.Core">File download link</returns>
     /// <path>api/2.0/files/file/{fileId}/presigned</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("{fileId}/presigned")]
+    [HttpGet("{fileId}/presigned", Name = "getPresignedUri")]
     public async Task<DocumentService.FileLink> GetPresignedUriAsync(T fileId)
     {
         return await fileStorageService.GetPresignedUriAsync(fileId);
@@ -260,7 +260,7 @@ public abstract class EditorController<T>(FileStorageService fileStorageService,
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
     /// <visible>false</visible>
-    [HttpGet("{fileId}/sharedusers")]
+    [HttpGet("{fileId}/sharedusers", Name = "sharedUsers")]
     public async Task<List<MentionWrapper>> SharedUsers(T fileId)
     {
         return await fileStorageService.SharedUsersAsync(fileId);
@@ -275,7 +275,7 @@ public abstract class EditorController<T>(FileStorageService fileStorageService,
     /// <returns type="ASC.Web.Files.Services.DocumentService.FileReference, ASC.Files.Core">File reference data</returns>
     /// <path>api/2.0/files/file/referencedata</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("referencedata")]
+    [HttpPost("referencedata", Name = "getReferenceData")]
     public async Task<FileReference<T>> GetReferenceDataAsync(GetReferenceDataDto<T> inDto)
     {
         return await fileStorageService.GetReferenceDataAsync(inDto.FileKey, inDto.InstanceId, inDto.SourceFileId, inDto.Path);
@@ -291,7 +291,7 @@ public abstract class EditorController<T>(FileStorageService fileStorageService,
     /// <path>api/2.0/files/file/{fileId}/protectusers</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("{fileId}/protectusers")]
+    [HttpGet("{fileId}/protectusers", Name = "protectUsers")]
     public async Task<List<MentionWrapper>> ProtectUsers(T fileId)
     {
         return await fileStorageService.ProtectUsersAsync(fileId);
@@ -317,7 +317,7 @@ public class EditorController(FilesLinkUtility filesLinkUtility,
     /// <path>api/2.0/files/docservice</path>
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
-    [HttpPut("docservice")]
+    [HttpPut("docservice", Name = "checkDocServiceUrl")]
     public async Task<DocServiceUrlDto> CheckDocServiceUrl(CheckDocServiceUrlRequestDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -366,7 +366,7 @@ public class EditorController(FilesLinkUtility filesLinkUtility,
     /// <requiresAuthorization>false</requiresAuthorization>
     /// <visible>false</visible>
     [AllowAnonymous]
-    [HttpGet("docservice")]
+    [HttpGet("docservice", Name = "getDocServiceUrl")]
     public async Task<DocServiceUrlDto> GetDocServiceUrlAsync(bool version)
     {
         var url = commonLinkUtility.GetFullAbsolutePath(filesLinkUtility.DocServiceApiUrl);

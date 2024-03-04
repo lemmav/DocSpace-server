@@ -55,7 +55,7 @@ public class OwnerController(MessageService messageService,
     /// <returns type="System.Object, System">Message about changing the portal owner</returns>
     /// <path>api/2.0/settings/owner</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("")]
+    [HttpPost("", Name = "sendOwnerChangeInstructions")]
     public async Task<object> SendOwnerChangeInstructionsAsync(SettingsRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -94,7 +94,7 @@ public class OwnerController(MessageService messageService,
     /// <returns></returns>
     /// <path>api/2.0/settings/owner</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("")]
+    [HttpPut("", Name = "updateOwner")]
     [Authorize(AuthenticationSchemes = "confirm", Roles = "PortalOwnerChange")]
     public async Task OwnerAsync(SettingsRequestsDto inDto)
     {

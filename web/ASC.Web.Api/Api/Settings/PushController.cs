@@ -45,8 +45,8 @@ public class PushController(ApiContext apiContext,
     /// <returns type="ASC.Core.Common.EF.FireBaseUser, ASC.Core.Common">FireBase user</returns>
     /// <path>api/2.0/settings/push/docregisterdevice</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("docregisterdevice")]
-    public async Task<FireBaseUser> DocRegisterPusnNotificationDeviceAsync(FirebaseRequestsDto inDto)
+    [HttpPost("docregisterdevice", Name = "docRegisterPushNotificationDevice")]
+    public async Task<FireBaseUser> DocRegisterPushNotificationDeviceAsync(FirebaseRequestsDto inDto)
     {
         return await firebaseHelper.RegisterUserDeviceAsync(inDto.FirebaseDeviceToken, inDto.IsSubscribed, PushConstants.PushDocAppName);
     }
@@ -60,7 +60,7 @@ public class PushController(ApiContext apiContext,
     /// <returns type="ASC.Core.Common.EF.FireBaseUser, ASC.Core.Common">Firebase user</returns>
     /// <path>api/2.0/settings/push/docsubscribe</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("docsubscribe")]
+    [HttpPut("docsubscribe", Name = "subscribeDocumentsPushNotification")]
     public async Task<FireBaseUser> SubscribeDocumentsPushNotificationAsync(FirebaseRequestsDto inDto)
     {
         return await firebaseHelper.UpdateUserAsync(inDto.FirebaseDeviceToken, inDto.IsSubscribed, PushConstants.PushDocAppName);

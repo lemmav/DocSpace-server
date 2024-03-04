@@ -46,7 +46,7 @@ public class CustomSchemasController(MessageService messageService,
     /// <path>api/2.0/settings/customschemas</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("")]
+    [HttpGet("", Name = "peopleSchemas")]
     public async Task<List<SchemaRequestsDto>> PeopleSchemasAsync()
     {
         return await customNamingPeople
@@ -82,7 +82,7 @@ public class CustomSchemasController(MessageService messageService,
     /// <returns type="ASC.Web.Api.ApiModel.RequestsDto.SchemaRequestsDto, ASC.Web.Api">Team template with the following parameters</returns>
     /// <path>api/2.0/settings/customschemas</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("")]
+    [HttpPost("", Name = "saveNamingSettings")]
     public async Task<SchemaRequestsDto> SaveNamingSettingsAsync(SchemaRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -105,7 +105,7 @@ public class CustomSchemasController(MessageService messageService,
     /// <returns type="ASC.Web.Api.ApiModel.RequestsDto.SchemaRequestsDto, ASC.Web.Api">Custom team template with the following parameters</returns>
     /// <path>api/2.0/settings/customschemas</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("")]
+    [HttpPut("", Name = "saveCustomNamingSettings")]
     public async Task<SchemaRequestsDto> SaveCustomNamingSettingsAsync(SchemaRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -165,7 +165,7 @@ public class CustomSchemasController(MessageService messageService,
     /// <returns type="ASC.Web.Api.ApiModel.RequestsDto.SchemaRequestsDto, ASC.Web.Api">Team template with the following parameters</returns>
     /// <path>api/2.0/settings/customschemas/{id}</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("{id}")]
+    [HttpGet("{id}", Name = "peopleSchema")]
     public async Task<SchemaRequestsDto> PeopleSchemaAsync(string id)
     {
         var names = await customNamingPeople.GetPeopleNamesAsync(id);

@@ -61,7 +61,7 @@ public class TfaappController(MessageService messageService,
     ///<path>api/2.0/settings/tfaapp</path>
     ///<httpMethod>GET</httpMethod>
     ///<collection>list</collection>
-    [HttpGet("tfaapp")]
+    [HttpGet("tfaapp", Name = "getTfaSettings")]
     public async Task<IEnumerable<TfaSettingsDto>> GetTfaSettingsAsync()
     {
         var result = new List<TfaSettingsDto>();
@@ -113,7 +113,7 @@ public class TfaappController(MessageService messageService,
     /// <returns type="System.Boolean, System">True if the code is valid</returns>
     ///<path>api/2.0/settings/tfaapp/validate</path>
     ///<httpMethod>POST</httpMethod>
-    [HttpPost("tfaapp/validate")]
+    [HttpPost("tfaapp/validate", Name = "tfaValidateAuthCode")]
     [AllowNotPayment]
     [Authorize(AuthenticationSchemes = "confirm", Roles = "TfaActivation,TfaAuth,Everyone")]
     public async Task<bool> TfaValidateAuthCodeAsync(TfaValidateRequestsDto inDto)
@@ -139,7 +139,7 @@ public class TfaappController(MessageService messageService,
     /// <returns type="System.Object, System">Confirmation email URL</returns>
     ///<path>api/2.0/settings/tfaapp/confirm</path>
     ///<httpMethod>GET</httpMethod>
-    [HttpGet("tfaapp/confirm")]
+    [HttpGet("tfaapp/confirm", Name = "tfaConfirmUrl")]
     public async Task<object> TfaConfirmUrlAsync()
     {
         var user = await userManager.GetUsersAsync(authContext.CurrentAccount.ID);
@@ -177,7 +177,7 @@ public class TfaappController(MessageService messageService,
     /// <returns type="System.Boolean, System">True if the operation is successful</returns>
     ///<path>api/2.0/settings/tfaapp</path>
     ///<httpMethod>PUT</httpMethod>
-    [HttpPut("tfaapp")]
+    [HttpPut("tfaapp", Name = "tfaSettings")]
     public async Task<bool> TfaSettingsAsync(TfaRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -278,7 +278,7 @@ public class TfaappController(MessageService messageService,
     /// <returns type="System.Object, System">Confirmation email URL</returns>
     /// <path>api/2.0/settings/tfaappwithlink</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("tfaappwithlink")]
+    [HttpPut("tfaappwithlink", Name = "tfaSettingsLink")]
     public async Task<object> TfaSettingsLink(TfaRequestsDto inDto)
     {
         if (await TfaSettingsAsync(inDto))
@@ -297,7 +297,7 @@ public class TfaappController(MessageService messageService,
     /// <returns type="Google.Authenticator.SetupCode, Google.Authenticator">Setup code</returns>
     /// <path>api/2.0/settings/tfaapp/setup</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("tfaapp/setup")]
+    [HttpGet("tfaapp/setup", Name = "tfaAppGenerateSetupCode")]
     [Authorize(AuthenticationSchemes = "confirm", Roles = "TfaActivation")]
     public async Task<SetupCode> TfaAppGenerateSetupCodeAsync()
     {
@@ -328,7 +328,7 @@ public class TfaappController(MessageService messageService,
     /// <path>api/2.0/settings/tfaappcodes</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("tfaappcodes")]
+    [HttpGet("tfaappcodes", Name = "tfaAppGetCodes")]
     public async Task<IEnumerable<object>> TfaAppGetCodesAsync()
     {
         var currentUser = await userManager.GetUsersAsync(authContext.CurrentAccount.ID);
@@ -355,7 +355,7 @@ public class TfaappController(MessageService messageService,
     /// <path>api/2.0/settings/tfaappnewcodes</path>
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
-    [HttpPut("tfaappnewcodes")]
+    [HttpPut("tfaappnewcodes", Name = "tfaAppRequestNewCodes")]
     public async Task<IEnumerable<object>> TfaAppRequestNewCodesAsync()
     {
         var currentUser = await userManager.GetUsersAsync(authContext.CurrentAccount.ID);
@@ -384,7 +384,7 @@ public class TfaappController(MessageService messageService,
     /// <returns type="System.Object, System">Login URL</returns>
     /// <path>api/2.0/settings/tfaappnewapp</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("tfaappnewapp")]
+    [HttpPut("tfaappnewapp", Name = "tfaAppNewApp")]
     public async Task<object> TfaAppNewAppAsync(TfaRequestsDto inDto)
     {
         var id = inDto?.Id ?? Guid.Empty;

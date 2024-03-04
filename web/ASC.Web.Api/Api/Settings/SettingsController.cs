@@ -83,7 +83,7 @@ public class SettingsController(MessageService messageService,
     /// <path>api/2.0/settings</path>
     /// <httpMethod>GET</httpMethod>
     /// <requiresAuthorization>false</requiresAuthorization>
-    [HttpGet("")]
+    [HttpGet("", Name = "getSettings")]
     [AllowNotPayment, AllowSuspended, AllowAnonymous]
     public async Task<SettingsDto> GetSettingsAsync(bool? withpassword)
     {
@@ -220,7 +220,7 @@ public class SettingsController(MessageService messageService,
     /// <returns type="System.Object, System">Message about the result of saving the mail domain settings</returns>
     /// <path>api/2.0/settings/maildomainsettings</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("maildomainsettings")]
+    [HttpPost("maildomainsettings", Name = "saveMailDomainSettings")]
     public async Task<object> SaveMailDomainSettingsAsync(MailDomainSettingsRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -269,7 +269,7 @@ public class SettingsController(MessageService messageService,
     /// <path>api/2.0/settings/quota</path>
     /// <httpMethod>GET</httpMethod>
     /// <visible>false</visible>
-    [HttpGet("quota")]
+    [HttpGet("quota", Name = "getQuotaUsed")]
     public async Task<QuotaUsageDto> GetQuotaUsed()
     {
         return await quotaUsageManager.Get();
@@ -287,7 +287,7 @@ public class SettingsController(MessageService messageService,
     /// <path>api/2.0/settings/userquotasettings</path>
     /// <httpMethod>POST</httpMethod>
     /// <visible>false</visible>
-    [HttpPost("userquotasettings")]
+    [HttpPost("userquotasettings", Name = "saveUserQuotaSettings")]
     public async Task<TenantUserQuotaSettings> SaveUserQuotaSettingsAsync(QuotaSettingsRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -309,7 +309,7 @@ public class SettingsController(MessageService messageService,
         return quotaSettings;
     }
 
-    [HttpGet("userquotasettings")]
+    [HttpGet("userquotasettings", Name = "getUserQuotaSettings")]
     public async Task<object> GetUserQuotaSettings()
     {
         return await settingsManager.LoadAsync<TenantUserQuotaSettings>();
@@ -326,7 +326,7 @@ public class SettingsController(MessageService messageService,
     /// <returns type="System.Object, System">Message about the result of saving the room quota settings</returns>
     /// <path>api/2.0/settings/roomquotasettings</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("roomquotasettings")]
+    [HttpPost("roomquotasettings", Name = "saveRoomQuotaSettings")]
     public async Task<TenantRoomQuotaSettings> SaveRoomQuotaSettingsAsync(QuotaSettingsRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -359,7 +359,7 @@ public class SettingsController(MessageService messageService,
     /// <returns type="System.Object, System">Message about the result of saving the tenant quota settings</returns>
     /// <path>api/2.0/settings/tenantquotasettings</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("tenantquotasettings")]
+    [HttpPut("tenantquotasettings", Name = "setTenantQuotaSettings")]
     public async Task<TenantQuotaSettings> SetTenantQuotaSettingsAsync(TenantQuotaSettingsRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -404,7 +404,7 @@ public class SettingsController(MessageService messageService,
     /// <collection>list</collection>
     [AllowAnonymous]
     [AllowNotPayment]
-    [HttpGet("cultures")]
+    [HttpGet("cultures", Name = "getSupportedCultures")]
     public IEnumerable<string> GetSupportedCultures()
     {
         return setupInfo.EnabledCultures.Select(r => r.Name).ToList();
@@ -420,9 +420,9 @@ public class SettingsController(MessageService messageService,
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
     [Authorize(AuthenticationSchemes = "confirm", Roles = "Wizard,Administrators")]
-    [HttpGet("timezones")]
+    [HttpGet("timezones", Name = "getTimeZones")]
     [AllowNotPayment]
-    public async Task<List<TimezonesRequestsDto>> GetTimeZonesAsyncAsync()
+    public async Task<List<TimezonesRequestsDto>> GetTimeZonesAsync()
     {
         await ApiContext.AuthByClaimAsync();
         var timeZones = TimeZoneInfo.GetSystemTimeZones().ToList();
@@ -455,7 +455,7 @@ public class SettingsController(MessageService messageService,
     /// <path>api/2.0/settings/machine</path>
     /// <httpMethod>GET</httpMethod>
     [Authorize(AuthenticationSchemes = "confirm", Roles = "Wizard")]
-    [HttpGet("machine")]
+    [HttpGet("machine", Name = "getMachineName")]
     [AllowNotPayment]
     public object GetMachineName()
     {
@@ -471,7 +471,7 @@ public class SettingsController(MessageService messageService,
     /// <returns type="System.Object, System">Message about changing DNS</returns>
     /// <path>api/2.0/settings/dns</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("dns")]
+    [HttpPut("dns", Name = "saveDnsSettings")]
     public async Task<object> SaveDnsSettingsAsync(DnsSettingsRequestsDto inDto)
     {
         return await dnsSettings.SaveDnsSettingsAsync(inDto.DnsName, inDto.Enable);
@@ -488,7 +488,7 @@ public class SettingsController(MessageService messageService,
     /// <httpMethod>GET</httpMethod>
     /// <returns></returns>
     /// <visible>false</visible>
-    [HttpGet("recalculatequota")]
+    [HttpGet("recalculatequota", Name = "recalculateQuota")]
     public async Task RecalculateQuotaAsync()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -506,7 +506,7 @@ public class SettingsController(MessageService messageService,
     /// <path>api/2.0/settings/checkrecalculatequota</path>
     /// <httpMethod>GET</httpMethod>
     /// <visible>false</visible>
-    [HttpGet("checkrecalculatequota")]
+    [HttpGet("checkrecalculatequota", Name = "checkRecalculateQuota")]
     public async Task<bool> CheckRecalculateQuotaAsync()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -523,7 +523,7 @@ public class SettingsController(MessageService messageService,
     /// <returns type="System.Object, System">Portal logo image URL</returns>
     /// <path>api/2.0/settings/logo</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("logo")]
+    [HttpGet("logo", Name = "getLogo")]
     public async Task<object> GetLogoAsync()
     {
         return await tenantInfoSettingsHelper.GetAbsoluteCompanyLogoPathAsync(await settingsManager.LoadAsync<TenantInfoSettings>());
@@ -539,7 +539,7 @@ public class SettingsController(MessageService messageService,
     /// <path>api/2.0/settings/wizard/complete</path>
     /// <httpMethod>PUT</httpMethod>
     [AllowNotPayment]
-    [HttpPut("wizard/complete")]
+    [HttpPut("wizard/complete", Name = "completeWizard")]
     [Authorize(AuthenticationSchemes = "confirm", Roles = "Wizard")]
     public async Task<WizardSettings> CompleteWizardAsync(WizardRequestsDto inDto)
     {
@@ -559,7 +559,7 @@ public class SettingsController(MessageService messageService,
     /// <path>api/2.0/settings/welcome/close</path>
     /// <httpMethod>PUT</httpMethod>
     ///<visible>false</visible>
-    [HttpPut("welcome/close")]
+    [HttpPut("welcome/close", Name = "closeWelcomePopup")]
     public async Task CloseWelcomePopupAsync()
     {
         var currentUser = await userManager.GetUsersAsync(authContext.CurrentAccount.ID);
@@ -585,7 +585,7 @@ public class SettingsController(MessageService messageService,
     /// <httpMethod>GET</httpMethod>
     /// <requiresAuthorization>false</requiresAuthorization>
     [AllowAnonymous, AllowNotPayment, AllowSuspended]
-    [HttpGet("colortheme")]
+    [HttpGet("colortheme", Name = "getColorTheme")]
     public async Task<CustomColorThemesSettingsDto> GetColorThemeAsync()
     {
         return new CustomColorThemesSettingsDto(await settingsManager.LoadAsync<CustomColorThemesSettings>(), customColorThemesSettingsHelper.Limit);
@@ -600,7 +600,7 @@ public class SettingsController(MessageService messageService,
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.CustomColorThemesSettingsDto, ASC.Web.Api">Portal theme settings</returns>
     /// <path>api/2.0/settings/colortheme</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("colortheme")]
+    [HttpPut("colortheme", Name = "saveColorTheme")]
     public async Task<CustomColorThemesSettingsDto> SaveColorThemeAsync(CustomColorThemesSettingsRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -674,7 +674,7 @@ public class SettingsController(MessageService messageService,
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.CustomColorThemesSettingsDto, ASC.Web.Api">Portal theme settings: custom color theme settings, selected or not, limit</returns>
     /// <path>api/2.0/settings/colortheme</path>
     /// <httpMethod>DELETE</httpMethod>
-    [HttpDelete("colortheme")]
+    [HttpDelete("colortheme", Name = "deleteColorTheme")]
     public async Task<CustomColorThemesSettingsDto> DeleteColorThemeAsync(int id)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -707,7 +707,7 @@ public class SettingsController(MessageService messageService,
     /// <returns></returns>
     /// <path>api/2.0/settings/closeadminhelper</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("closeadminhelper")]
+    [HttpPut("closeadminhelper", Name = "closeAdminHelper")]
     public async Task CloseAdminHelperAsync()
     {
         if (!await userManager.IsDocSpaceAdminAsync(authContext.CurrentAccount.ID) || coreBaseSettings.CustomMode || !coreBaseSettings.Standalone)
@@ -730,7 +730,7 @@ public class SettingsController(MessageService messageService,
     /// <path>api/2.0/settings/timeandlanguage</path>
     /// <httpMethod>PUT</httpMethod>
     ///<visible>false</visible>
-    [HttpPut("timeandlanguage")]
+    [HttpPut("timeandlanguage", Name = "updateTimeAndLanguage")]
     public async Task<object> TimaAndLanguageAsync(SettingsRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -780,7 +780,7 @@ public class SettingsController(MessageService messageService,
     /// <path>api/2.0/settings/defaultpage</path>
     /// <httpMethod>PUT</httpMethod>
     ///<visible>false</visible>
-    [HttpPut("defaultpage")]
+    [HttpPut("defaultpage", Name = "saveDefaultPageSetting")]
     public async Task<object> SaveDefaultPageSettingAsync(SettingsRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -801,7 +801,7 @@ public class SettingsController(MessageService messageService,
     /// <returns type="ASC.Web.Studio.Core.EmailActivationSettings, ASC.Web.Studio.Core">Updated email activation settings</returns>
     /// <path>api/2.0/settings/emailactivation</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("emailactivation")]
+    [HttpPut("emailactivation", Name = "updateEmailActivationSettings")]
     public async Task<EmailActivationSettings> UpdateEmailActivationSettingsAsync(EmailActivationSettings inDto)
     {
         await settingsManager.SaveForCurrentUserAsync(inDto);
@@ -818,7 +818,7 @@ public class SettingsController(MessageService messageService,
     /// <path>api/2.0/settings/statistics/spaceusage/{id}</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("statistics/spaceusage/{id:guid}")]
+    [HttpGet("statistics/spaceusage/{id:guid}", Name = "getSpaceUsageStatistics")]
     public async Task<List<UsageSpaceStatItemDto>> GetSpaceUsageStatistics(Guid id)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -857,7 +857,7 @@ public class SettingsController(MessageService messageService,
     /// <path>api/2.0/settings/statistics/visit</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("statistics/visit")]
+    [HttpGet("statistics/visit", Name = "getVisitStatistics")]
     public async Task<List<ChartPointDto>> GetVisitStatisticsAsync(ApiDateTime fromDate, ApiDateTime toDate)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -920,7 +920,7 @@ public class SettingsController(MessageService messageService,
     /// <path>api/2.0/settings/socket</path>
     /// <httpMethod>GET</httpMethod>
     /// <returns type="System.Object, System">Socket settings: hub URL</returns>
-    [HttpGet("socket")]
+    [HttpGet("socket", Name = "getSocketSettings")]
     public object GetSocketSettings()
     {
         var hubUrl = configuration["web:hub"] ?? string.Empty;
@@ -959,7 +959,7 @@ public class SettingsController(MessageService messageService,
     /// <httpMethod>GET</httpMethod>
     /// <returns type="ASC.Web.Api.ApiModel.RequestsDto.AuthServiceRequestsDto, ASC.Web.Api">Authorization services</returns>
     /// <collection>list</collection>
-    [HttpGet("authservice")]
+    [HttpGet("authservice", Name = "getAuthServices")]
     public async Task<IEnumerable<AuthServiceRequestsDto>> GetAuthServices()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -980,7 +980,7 @@ public class SettingsController(MessageService messageService,
     /// <path>api/2.0/settings/authservice</path>
     /// <httpMethod>POST</httpMethod>
     /// <returns type="System.Boolean, System">Boolean value: true if the authorization keys are changed</returns>
-    [HttpPost("authservice")]
+    [HttpPost("authservice", Name = "saveAuthKeys")]
     public async Task<bool> SaveAuthKeys(AuthServiceRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -1039,7 +1039,7 @@ public class SettingsController(MessageService messageService,
     /// <httpMethod>GET</httpMethod>
     /// <returns type="System.Object, System">Payment settings: sales email, feedback and support URL, link to pay for a portal, Standalone or not, current license, maximum quota quantity</returns>
     [AllowNotPayment]
-    [HttpGet("payment")]
+    [HttpGet("payment", Name = "paymentSettings")]
     public async Task<object> PaymentSettingsAsync()
     {
         var settings = await settingsManager.LoadForDefaultTenantAsync<AdditionalWhiteLabelSettings>();
@@ -1076,7 +1076,7 @@ public class SettingsController(MessageService messageService,
     /// <httpMethod>GET</httpMethod>
     /// <returns type="System.Object, System">Telegram link</returns>
     /// <visible>false</visible>
-    [HttpGet("telegramlink")]
+    [HttpGet("telegramlink", Name = "telegramLink")]
     public async Task<object> TelegramLink()
     {
         var tenant = await tenantManager.GetCurrentTenantAsync();
@@ -1100,7 +1100,7 @@ public class SettingsController(MessageService messageService,
     /// <httpMethod>GET</httpMethod>
     /// <returns type="System.Object, System">Operation result: 0 - not connected, 1 - connected, 2 - awaiting confirmation</returns>
     /// <visible>false</visible>
-    [HttpGet("telegramisconnected")]
+    [HttpGet("telegramisconnected", Name = "telegramIsConnected")]
     public async Task<object> TelegramIsConnectedAsync()
     {
         var tenant = await tenantManager.GetCurrentTenantAsync();
@@ -1116,7 +1116,7 @@ public class SettingsController(MessageService messageService,
     /// <httpMethod>DELETE</httpMethod>
     /// <returns></returns>
     /// <visible>false</visible>
-    [HttpDelete("telegramdisconnect")]
+    [HttpDelete("telegramdisconnect", Name = "telegramDisconnect")]
     public async Task TelegramDisconnectAsync()
     {
         var tenant = await tenantManager.GetCurrentTenantAsync();

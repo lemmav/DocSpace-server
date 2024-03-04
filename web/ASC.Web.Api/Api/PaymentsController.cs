@@ -62,7 +62,7 @@ public class PaymentController(UserManager userManager,
     /// <returns type="System.Uri, System">The URL to the payment page</returns>
     /// <path>api/2.0/portal/payment/url</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("url")]
+    [HttpPut("url", Name = "getPaymentUrl")]
     public async Task<Uri> GetPaymentUrlAsync(PaymentUrlRequestsDto inDto)
     {
         var tenant = await tenantManager.GetCurrentTenantAsync();
@@ -97,7 +97,7 @@ public class PaymentController(UserManager userManager,
     /// <returns type="System.Boolean, System">Boolean value: true if the operation is successful</returns>
     /// <path>api/2.0/portal/payment/update</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("update")]
+    [HttpPut("update", Name = "paymentUpdate")]
     public async Task<bool> PaymentUpdateAsync(PaymentUrlRequestsDto inDto)
     {
         var tenant = await tenantManager.GetCurrentTenantAsync();
@@ -124,7 +124,7 @@ public class PaymentController(UserManager userManager,
     /// <returns type="System.Object, System">The URL to the payment account</returns>
     /// <path>api/2.0/portal/payment/account</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("account")]
+    [HttpGet("account", Name = "getPaymentAccount")]
     public async Task<object> GetPaymentAccountAsync(string backUrl)
     {
         if (!tariffService.IsConfigured())
@@ -156,7 +156,7 @@ public class PaymentController(UserManager userManager,
     /// <returns type="System.Object, System">List of available portal prices</returns>
     /// <path>api/2.0/portal/payment/prices</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("prices")]
+    [HttpGet("prices", Name = "getPrices")]
     public async Task<object> GetPricesAsync()
     {
         var currency = await regionHelper.GetCurrencyFromRequestAsync();
@@ -177,7 +177,7 @@ public class PaymentController(UserManager userManager,
     /// <path>api/2.0/portal/payment/currencies</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("currencies")]
+    [HttpGet("currencies", Name = "getCurrencies")]
     public async IAsyncEnumerable<CurrenciesDto> GetCurrenciesAsync()
     {
         var defaultRegion = regionHelper.GetDefaultRegionInfo();
@@ -202,7 +202,7 @@ public class PaymentController(UserManager userManager,
     /// <path>api/2.0/portal/payment/quotas</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("quotas")]
+    [HttpGet("quotas", Name = "getQuotas")]
     public async Task<IEnumerable<QuotaDto>> GetQuotasAsync()
     {
         return await tariffHelper.GetQuotasAsync().ToListAsync();
@@ -218,7 +218,7 @@ public class PaymentController(UserManager userManager,
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.QuotaDto, ASC.Web.Api">Payment information about the current portal quota</returns>
     /// <path>api/2.0/portal/payment/quota</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("quota")]
+    [HttpGet("quota", Name = "getPaymentQuota")]
     public async Task<QuotaDto> GetQuotaAsync(bool refresh)
     {
         return await tariffHelper.GetCurrentQuotaAsync(refresh);
@@ -235,7 +235,7 @@ public class PaymentController(UserManager userManager,
     /// <returns></returns>
     /// <path>api/2.0/portal/payment/request</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("request")]
+    [HttpPost("request", Name = "sendSalesRequest")]
     public async Task SendSalesRequestAsync(SalesRequestsDto inDto)
     {
         if (!inDto.Email.TestEmailRegex())

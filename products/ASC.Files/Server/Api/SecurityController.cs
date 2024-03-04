@@ -68,7 +68,7 @@ public abstract class SecurityController<T>(FileStorageService fileStorageServic
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
     /// <visible>false</visible>
-    [HttpGet("file/{fileId}/share")]
+    [HttpGet("file/{fileId}/share", Name = "getFileSecurityInfo")]
     public async IAsyncEnumerable<FileShareDto> GetFileSecurityInfoAsync(T fileId)
     {
         await foreach (var s in securityControllerHelper.GetFileSecurityInfoAsync(fileId))
@@ -88,7 +88,7 @@ public abstract class SecurityController<T>(FileStorageService fileStorageServic
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
     /// <visible>false</visible>
-    [HttpGet("folder/{folderId}/share")]
+    [HttpGet("folder/{folderId}/share", Name = "getFolderSecurityInfo")]
     public async IAsyncEnumerable<FileShareDto> GetFolderSecurityInfoAsync(T folderId)
     {
         await foreach (var s in securityControllerHelper.GetFolderSecurityInfoAsync(folderId))
@@ -109,7 +109,7 @@ public abstract class SecurityController<T>(FileStorageService fileStorageServic
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
     /// <visible>false</visible>
-    [HttpPut("file/{fileId}/share")]
+    [HttpPut("file/{fileId}/share", Name = "setFileSecurityInfo")]
     public async IAsyncEnumerable<FileShareDto> SetFileSecurityInfoAsync(T fileId, SecurityInfoRequestDto inDto)
     {
         await foreach (var s in securityControllerHelper.SetSecurityInfoAsync(new List<T> { fileId }, new List<T>(), inDto.Share, inDto.Notify, inDto.SharingMessage))
@@ -130,7 +130,7 @@ public abstract class SecurityController<T>(FileStorageService fileStorageServic
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
     /// <visible>false</visible>
-    [HttpPut("folder/{folderId}/share")]
+    [HttpPut("folder/{folderId}/share", Name = "setFolderSecurityInfo")]
     public async IAsyncEnumerable<FileShareDto> SetFolderSecurityInfoAsync(T folderId, SecurityInfoRequestDto inDto)
     {
         await foreach (var s in securityControllerHelper.SetSecurityInfoAsync(new List<T>(), new List<T> { folderId }, inDto.Share, inDto.Notify, inDto.SharingMessage))
@@ -150,7 +150,7 @@ public abstract class SecurityController<T>(FileStorageService fileStorageServic
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
     /// <visible>false</visible>
-    [HttpGet("file/{fileId}/publickeys")]
+    [HttpGet("file/{fileId}/publickeys", Name = "getEncryptionAccess")]
     public async Task<List<EncryptionKeyPairDto>> GetEncryptionAccess(T fileId)
     {
         return await fileStorageService.GetEncryptionAccessAsync(fileId);
@@ -168,13 +168,13 @@ public abstract class SecurityController<T>(FileStorageService fileStorageServic
     /// <httpMethod>POST</httpMethod>
     /// <collection>list</collection>
     /// <visible>false</visible>
-    [HttpPost("file/{fileId}/sendeditornotify")]
+    [HttpPost("file/{fileId}/sendeditornotify", Name = "sendEditorNotify")]
     public async Task<List<AceShortWrapper>> SendEditorNotify(T fileId, MentionMessageWrapper mentionMessage)
     {
         return await fileStorageService.SendEditorNotifyAsync(fileId, mentionMessage);
     }
     
-    [HttpGet("folder/{folderId}/group/{groupId:guid}/share")]
+    [HttpGet("folder/{folderId}/group/{groupId:guid}/share", Name = "getGroupsMembersWithFolderSecurity")]
     public async IAsyncEnumerable<GroupMemberSecurityDto> GetGroupsMembersWithFolderSecurityAsync(T folderId, Guid groupId)
     {
         var offset = Convert.ToInt32(apiContext.StartIndex);
@@ -220,7 +220,7 @@ public class SecurityControllerCommon(FileStorageService fileStorageService,
     /// <httpMethod>POST</httpMethod>
     /// <collection>list</collection>
     /// <visible>false</visible>
-    [HttpPost("owner")]
+    [HttpPost("owner", Name = "changeOwner")]
     public async IAsyncEnumerable<FileEntryDto> ChangeOwnerAsync(ChangeOwnerRequestDto inDto)
     {
         var (folderIntIds, folderStringIds) = FileOperationsManager.GetIds(inDto.FolderIds);
@@ -247,7 +247,7 @@ public class SecurityControllerCommon(FileStorageService fileStorageService,
     /// <httpMethod>POST</httpMethod>
     /// <collection>list</collection>
     /// <visible>false</visible>
-    [HttpPost("share")]
+    [HttpPost("share", Name = "getSecurityInfo")]
     public async IAsyncEnumerable<FileShareDto> GetSecurityInfoAsync(BaseBatchRequestDto inDto)
     {
         var (folderIntIds, folderStringIds) = FileOperationsManager.GetIds(inDto.FolderIds);
@@ -272,7 +272,7 @@ public class SecurityControllerCommon(FileStorageService fileStorageService,
     /// <path>api/2.0/files/share</path>
     /// <httpMethod>DELETE</httpMethod>
     /// <visible>false</visible>
-    [HttpDelete("share")]
+    [HttpDelete("share", Name = "removeSecurityInfo")]
     public async Task<bool> RemoveSecurityInfoAsync(BaseBatchRequestDto inDto)
     {
         var (folderIntIds, folderStringIds) = FileOperationsManager.GetIds(inDto.FolderIds);
@@ -296,7 +296,7 @@ public class SecurityControllerCommon(FileStorageService fileStorageService,
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
     /// <visible>false</visible>
-    [HttpPut("share")]
+    [HttpPut("share", Name = "setSecurityInfo")]
     public async IAsyncEnumerable<FileShareDto> SetSecurityInfoAsync(SecurityInfoRequestDto inDto)
     {
         var (folderIntIds, folderStringIds) = FileOperationsManager.GetIds(inDto.FolderIds);
@@ -322,7 +322,7 @@ public class SecurityControllerCommon(FileStorageService fileStorageService,
     /// <httpMethod>GET</httpMethod>
     /// <visible>false</visible>
     [AllowAnonymous]
-    [HttpGet("share/{key}")]
+    [HttpGet("share/{key}", Name = "getExternalShareData")]
     public async Task<ExternalShareDto> GetExternalShareDataAsync(string key)
     {
         var validationInfo = await externalLinkHelper.ValidateAsync(key);
@@ -342,7 +342,7 @@ public class SecurityControllerCommon(FileStorageService fileStorageService,
     /// <httpMethod>POST</httpMethod>
     /// <visible>false</visible>
     [AllowAnonymous]
-    [HttpPost("share/{key}/password")]
+    [HttpPost("share/{key}/password", Name = "applyExternalSharePassword")]
     public async Task<ExternalShareDto> ApplyExternalSharePasswordAsync(string key, ExternalShareRequestDto inDto)
     {
         var ip = MessageSettings.GetIP(httpContextAccessor.HttpContext?.Request);

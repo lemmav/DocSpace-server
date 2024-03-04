@@ -46,7 +46,7 @@ public class ModulesController(WebItemManagerSecurity webItemManagerSecurity) : 
     /// <path>api/2.0/modules</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet]
+    [HttpGet(Name = "getAll")]
     public IEnumerable<string> GetAll()
     {
         var result = new List<string>();
@@ -69,7 +69,7 @@ public class ModulesController(WebItemManagerSecurity webItemManagerSecurity) : 
     /// <path>api/2.0/modules/info</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("info")]
+    [HttpGet("info", Name = "getAllWithInfo")]
     public IEnumerable<Module> GetAllWithInfo()
     {
         foreach (var a in webItemManagerSecurity.GetItems(WebZoneType.StartProductList))

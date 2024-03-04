@@ -70,7 +70,7 @@ public class ThirdpartyController(AccountLinker accountLinker,
     /// <requiresAuthorization>false</requiresAuthorization>
     /// <collection>list</collection>
     [AllowAnonymous, AllowNotPayment]
-    [HttpGet("providers")]
+    [HttpGet("providers", Name = "getAuthProviders")]
     public async Task<ICollection<AccountInfoDto>> GetAuthProvidersAsync(bool inviteView, bool settingsView, string clientCallback, string fromOnly)
     {
         var infos = new List<AccountInfoDto>();
@@ -121,7 +121,7 @@ public class ThirdpartyController(AccountLinker accountLinker,
     /// <path>api/2.0/people/thirdparty/linkaccount</path>
     /// <httpMethod>PUT</httpMethod>
     /// <returns></returns>
-    [HttpPut("linkaccount")]
+    [HttpPut("linkaccount", Name = "linkAccount")]
     public async Task LinkAccountAsync(LinkAccountRequestDto inDto)
     {
         var profile = LoginProfile.FromTransport(instanceCrypto, inDto.SerializedProfile);
@@ -159,7 +159,7 @@ public class ThirdpartyController(AccountLinker accountLinker,
     /// <returns></returns>
     /// <requiresAuthorization>false</requiresAuthorization>
     [AllowAnonymous]
-    [HttpPost("signup")]
+    [HttpPost("signup", Name = "signupAccount")]
     public async Task SignupAccountAsync(SignupAccountRequestDto inDto)
     {
         var passwordHash = inDto.PasswordHash;
@@ -264,7 +264,7 @@ public class ThirdpartyController(AccountLinker accountLinker,
     /// <path>api/2.0/people/thirdparty/unlinkaccount</path>
     /// <httpMethod>DELETE</httpMethod>
     /// <returns></returns>
-    [HttpDelete("unlinkaccount")]
+    [HttpDelete("unlinkaccount", Name = "unlinkAccount")]
     public async Task UnlinkAccountAsync(string provider)
     {
         await accountLinker.RemoveProviderAsync(securityContext.CurrentAccount.ID.ToString(), provider);

@@ -57,7 +57,7 @@ public class WhitelabelController(ApiContext apiContext,
     /// <path>api/2.0/settings/whitelabel/save</path>
     /// <httpMethod>POST</httpMethod>
     ///<visible>false</visible>
-    [HttpPost("whitelabel/save")]
+    [HttpPost("whitelabel/save", Name = "saveWhiteLabelSettings")]
     public async Task<bool> SaveWhiteLabelSettingsAsync(WhiteLabelRequestsDto inDto, [FromQuery] WhiteLabelQueryRequestsDto inQueryDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -133,7 +133,7 @@ public class WhitelabelController(ApiContext apiContext,
     /// <path>api/2.0/settings/whitelabel/savefromfiles</path>
     /// <httpMethod>POST</httpMethod>
     ///<visible>false</visible>
-    [HttpPost("whitelabel/savefromfiles")]
+    [HttpPost("whitelabel/savefromfiles", Name = "saveWhiteLabelSettingsFromFiles")]
     public async Task<bool> SaveWhiteLabelSettingsFromFilesAsync([FromQuery] WhiteLabelQueryRequestsDto inQueryDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -220,7 +220,7 @@ public class WhitelabelController(ApiContext apiContext,
     /// <collection>list</collection>
     /// <visible>false</visible>
     [AllowNotPayment, AllowAnonymous, AllowSuspended]
-    [HttpGet("whitelabel/logos")]
+    [HttpGet("whitelabel/logos", Name = "getWhiteLabelLogos")]
     public async IAsyncEnumerable<WhiteLabelItemDto> GetWhiteLabelLogosAsync([FromQuery] WhiteLabelQueryRequestsDto inQueryDto)
     {
         var isDefault = inQueryDto is { IsDefault: not null } && inQueryDto.IsDefault.Value;
@@ -299,7 +299,7 @@ public class WhitelabelController(ApiContext apiContext,
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
     /// <visible>false</visible>
-    [HttpGet("whitelabel/logos/isdefault")]
+    [HttpGet("whitelabel/logos/isdefault", Name = "getIsDefaultWhiteLabelLogos")]
     public async IAsyncEnumerable<IsDefaultWhiteLabelLogosDto> GetIsDefaultWhiteLabelLogos()
     {
         var tenantWhiteLabelSettings = await settingsManager.LoadAsync<TenantWhiteLabelSettings>();
@@ -333,7 +333,7 @@ public class WhitelabelController(ApiContext apiContext,
     /// <httpMethod>GET</httpMethod>
     ///<visible>false</visible>
     [AllowNotPayment]
-    [HttpGet("whitelabel/logotext")]
+    [HttpGet("whitelabel/logotext", Name = "getWhiteLabelLogoText")]
     public async Task<object> GetWhiteLabelLogoTextAsync([FromQuery] WhiteLabelQueryRequestsDto inQueryDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -358,7 +358,7 @@ public class WhitelabelController(ApiContext apiContext,
     /// <path>api/2.0/settings/whitelabel/restore</path>
     /// <httpMethod>PUT</httpMethod>
     /// <visible>false</visible>
-    [HttpPut("whitelabel/restore")]
+    [HttpPut("whitelabel/restore", Name = "restoreWhiteLabelOptions")]
     public async Task<bool> RestoreWhiteLabelOptionsAsync([FromQuery] WhiteLabelQueryRequestsDto inQueryDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -415,7 +415,7 @@ public class WhitelabelController(ApiContext apiContext,
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
     /// <visible>false</visible>
-    [HttpGet("companywhitelabel")]
+    [HttpGet("companywhitelabel", Name = "getLicensorData")]
     public async Task<List<CompanyWhiteLabelSettings>> GetLicensorDataAsync()
     {
         var result = new List<CompanyWhiteLabelSettings>();
@@ -442,7 +442,7 @@ public class WhitelabelController(ApiContext apiContext,
     /// <path>api/2.0/settings/rebranding/company</path>
     /// <httpMethod>POST</httpMethod>
     /// <visible>false</visible>
-    [HttpPost("rebranding/company")]
+    [HttpPost("rebranding/company", Name = "saveCompanyWhiteLabelSettings")]
     public async Task<bool> SaveCompanyWhiteLabelSettingsAsync(CompanyWhiteLabelSettingsWrapper companyWhiteLabelSettingsWrapper)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -471,7 +471,7 @@ public class WhitelabelController(ApiContext apiContext,
     /// <httpMethod>GET</httpMethod>
     ///<visible>false</visible>
     [AllowNotPayment]
-    [HttpGet("rebranding/company")]
+    [HttpGet("rebranding/company", Name = "getCompanyWhiteLabelSettings")]
     public async Task<CompanyWhiteLabelSettingsDto> GetCompanyWhiteLabelSettingsAsync()
     {
         var settings = await settingsManager.LoadForDefaultTenantAsync<CompanyWhiteLabelSettings>();
@@ -488,7 +488,7 @@ public class WhitelabelController(ApiContext apiContext,
     /// <path>api/2.0/settings/rebranding/company</path>
     /// <httpMethod>DELETE</httpMethod>
     /// <visible>false</visible>
-    [HttpDelete("rebranding/company")]
+    [HttpDelete("rebranding/company", Name = "deleteCompanyWhiteLabelSettings")]
     public async Task<CompanyWhiteLabelSettings> DeleteCompanyWhiteLabelSettingsAsync()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -512,7 +512,7 @@ public class WhitelabelController(ApiContext apiContext,
     /// <path>api/2.0/settings/rebranding/additional</path>
     /// <httpMethod>POST</httpMethod>
     ///<visible>false</visible>
-    [HttpPost("rebranding/additional")]
+    [HttpPost("rebranding/additional", Name = "saveAdditionalWhiteLabelSettings")]
     public async Task<bool> SaveAdditionalWhiteLabelSettingsAsync(AdditionalWhiteLabelSettingsWrapper wrapper)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -539,7 +539,7 @@ public class WhitelabelController(ApiContext apiContext,
     /// <httpMethod>GET</httpMethod>
     ///<visible>false</visible>
     [AllowNotPayment]
-    [HttpGet("rebranding/additional")]
+    [HttpGet("rebranding/additional", Name = "getAdditionalWhiteLabelSettings")]
     public async Task<AdditionalWhiteLabelSettingsDto> GetAdditionalWhiteLabelSettingsAsync()
     {
         var settings = await settingsManager.LoadForDefaultTenantAsync<AdditionalWhiteLabelSettings>();
@@ -556,7 +556,7 @@ public class WhitelabelController(ApiContext apiContext,
     /// <path>api/2.0/settings/rebranding/additional</path>
     /// <httpMethod>DELETE</httpMethod>
     ///<visible>false</visible>
-    [HttpDelete("rebranding/additional")]
+    [HttpDelete("rebranding/additional", Name = "deleteAdditionalWhiteLabelSettings")]
     public async Task<AdditionalWhiteLabelSettings> DeleteAdditionalWhiteLabelSettingsAsync()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -580,7 +580,7 @@ public class WhitelabelController(ApiContext apiContext,
     /// <path>api/2.0/settings/rebranding/mail</path>
     /// <httpMethod>POST</httpMethod>
     ///<visible>false</visible>
-    [HttpPost("rebranding/mail")]
+    [HttpPost("rebranding/mail", Name = "saveMailWhiteLabelSettings")]
     public async Task<bool> SaveMailWhiteLabelSettingsAsync(MailWhiteLabelSettings settings)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -604,7 +604,7 @@ public class WhitelabelController(ApiContext apiContext,
     /// <path>api/2.0/settings/rebranding/mail</path>
     /// <httpMethod>PUT</httpMethod>
     ///<visible>false</visible>
-    [HttpPut("rebranding/mail")]
+    [HttpPut("rebranding/mail", Name = "updateMailWhiteLabelSettings")]
     public async Task<bool> UpdateMailWhiteLabelSettings(MailWhiteLabelSettingsRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -629,7 +629,7 @@ public class WhitelabelController(ApiContext apiContext,
     /// <path>api/2.0/settings/rebranding/mail</path>
     /// <httpMethod>GET</httpMethod>
     ///<visible>false</visible>
-    [HttpGet("rebranding/mail")]
+    [HttpGet("rebranding/mail", Name = "getMailWhiteLabelSettings")]
     public async Task<MailWhiteLabelSettings> GetMailWhiteLabelSettingsAsync()
     {
         return await settingsManager.LoadForDefaultTenantAsync<MailWhiteLabelSettings>();
@@ -644,7 +644,7 @@ public class WhitelabelController(ApiContext apiContext,
     /// <path>api/2.0/settings/rebranding/mail</path>
     /// <httpMethod>DELETE</httpMethod>
     ///<visible>false</visible>
-    [HttpDelete("rebranding/mail")]
+    [HttpDelete("rebranding/mail", Name = "deleteMailWhiteLabelSettings")]
     public async Task<MailWhiteLabelSettings> DeleteMailWhiteLabelSettingsAsync()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -667,7 +667,7 @@ public class WhitelabelController(ApiContext apiContext,
     /// <path>api/2.0/settings/enableWhitelabel</path>
     /// <httpMethod>GET</httpMethod>
     ///<visible>false</visible>
-    [HttpGet("enableWhitelabel")]
+    [HttpGet("enableWhitelabel", Name = "getEnableWhitelabel")]
     public async Task<bool> GetEnableWhitelabelAsync()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);

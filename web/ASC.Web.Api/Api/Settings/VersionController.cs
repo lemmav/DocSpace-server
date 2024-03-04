@@ -49,7 +49,7 @@ public class VersionController(PermissionContext permissionContext,
     /// <visible>false</visible>
     [AllowAnonymous]
     [AllowNotPayment]
-    [HttpGet("build")]
+    [HttpGet("build", Name = "getBuildVersions")]
     public async Task<BuildVersion> GetBuildVersionsAsync()
     {
         return await buildVersion.GetCurrentBuildVersionAsync();
@@ -66,7 +66,7 @@ public class VersionController(PermissionContext permissionContext,
     /// <httpMethod>GET</httpMethod>
     /// <returns type="ASC.Web.Api.ApiModel.ResponseDto.TenantVersionDto, ASC.Web.Api">List of availibe portal versions including the current version</returns>
     /// <visible>false</visible>
-    [HttpGet("")]
+    [HttpGet("", Name = "getVersions")]
     public async Task<TenantVersionDto> GetVersionsAsync()
     {
         var tenant = await tenantManager.GetCurrentTenantAsync();
@@ -85,7 +85,7 @@ public class VersionController(PermissionContext permissionContext,
     /// <httpMethod>PUT</httpMethod>
     /// <returns type="ASC.Web.Api.ApiModel.ResponseDto.TenantVersionDto, ASC.Web.Api">List of availibe portal versions including the current version</returns>
     /// <visible>false</visible>
-    [HttpPut("")]
+    [HttpPut("", Name = "setVersion")]
     public async Task<TenantVersionDto> SetVersionAsync(SettingsRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);

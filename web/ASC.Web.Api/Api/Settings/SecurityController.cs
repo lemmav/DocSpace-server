@@ -59,7 +59,7 @@ public class SecurityController(TenantManager tenantManager,
     /// <path>api/2.0/settings/security</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("")]
+    [HttpGet("", Name = "getWebItemSecurityInfo")]
     public async IAsyncEnumerable<SecurityDto> GetWebItemSecurityInfo([FromQuery] IEnumerable<string> ids)
     {
         if (ids == null || !ids.Any())
@@ -103,7 +103,7 @@ public class SecurityController(TenantManager tenantManager,
     /// <returns type="System.Boolean, System">Boolean value: true - module is enabled, false - module is disabled</returns>
     /// <path>api/2.0/settings/security/{id}</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("{id:guid}")]
+    [HttpGet("{id:guid}", Name = "getWebItemSecurityInfoById")]
     public async Task<bool> GetWebItemSecurityInfoAsync(Guid id)
     {
         var module = WebItemManager[id];
@@ -121,7 +121,7 @@ public class SecurityController(TenantManager tenantManager,
     /// <returns type="System.Object, System">List of enabled modules</returns>
     /// <path>api/2.0/settings/security/modules</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("modules")]
+    [HttpGet("modules", Name = "getEnabledModules")]
     public object GetEnabledModules()
     {
         var EnabledModules = webItemManagerSecurity.GetItems(WebZoneType.All)
@@ -141,7 +141,7 @@ public class SecurityController(TenantManager tenantManager,
     /// <returns type="ASC.Web.Core.Utility.PasswordSettings, ASC.Web.Core">Password settings</returns>
     /// <path>api/2.0/settings/security/password</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("password")]
+    [HttpGet("password", Name = "getPasswordSettings")]
     [AllowNotPayment]
     [Authorize(AuthenticationSchemes = "confirm", Roles = "Everyone")]
     public async Task<PasswordSettings> GetPasswordSettingsAsync()
@@ -160,7 +160,7 @@ public class SecurityController(TenantManager tenantManager,
     /// <returns type="ASC.Web.Core.Utility.PasswordSettings, ASC.Web.Core">Password settings</returns>
     /// <path>api/2.0/settings/security/password</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("password")]
+    [HttpPut("password", Name = "updatePasswordSettings")]
     public async Task<PasswordSettings> UpdatePasswordSettingsAsync(PasswordSettingsRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -191,7 +191,7 @@ public class SecurityController(TenantManager tenantManager,
     /// <httpMethod>PUT</httpMethod>
     /// <returns type="ASC.Web.Api.ApiModel.ResponseDto.SecurityDto, ASC.Web.Api">Security settings</returns>
     /// <collection>list</collection>
-    [HttpPut("")]
+    [HttpPut("", Name = "setWebItemSecurity")]
     public async Task<IEnumerable<SecurityDto>> SetWebItemSecurity(WebItemSecurityRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -243,7 +243,7 @@ public class SecurityController(TenantManager tenantManager,
     /// <httpMethod>PUT</httpMethod>
     /// <returns type="ASC.Web.Api.ApiModel.ResponseDto.SecurityDto, ASC.Web.Api">Security settings</returns>
     /// <collection>list</collection>
-    [HttpPut("access")]
+    [HttpPut("access", Name = "setAccessToWebItems")]
     public async Task<IEnumerable<SecurityDto>> SetAccessToWebItems(WebItemSecurityRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -301,7 +301,7 @@ public class SecurityController(TenantManager tenantManager,
     /// <path>api/2.0/settings/security/administrator/{productid}</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("administrator/{productid:guid}")]
+    [HttpGet("administrator/{productid:guid}", Name = "getProductAdministrators")]
     public async IAsyncEnumerable<EmployeeDto> GetProductAdministrators(Guid productid)
     {
         var admins = await webItemSecurity.GetProductAdministratorsAsync(productid);
@@ -324,7 +324,7 @@ public class SecurityController(TenantManager tenantManager,
     /// <returns type="System.Object, System">Object with the user security information: product ID, user ID, administrator or not</returns>
     /// <path>api/2.0/settings/security/administrator</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("administrator")]
+    [HttpGet("administrator", Name = "isProductAdministrator")]
     public async Task<object> IsProductAdministratorAsync(Guid productid, Guid userid)
     {
         var result = await webItemSecurity.IsProductAdministratorAsync(productid, userid);
@@ -342,7 +342,7 @@ public class SecurityController(TenantManager tenantManager,
     /// <returns type="System.Object, System">Object with the user security information: product ID, user ID, administrator or not</returns>
     /// <path>api/2.0/settings/security/administrator</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("administrator")]
+    [HttpPut("administrator", Name = "setProductAdministrator")]
     public async Task<object> SetProductAdministrator(SecurityRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -389,7 +389,7 @@ public class SecurityController(TenantManager tenantManager,
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.LoginSettingsDto, ASC.Web.Api">Updated login settings</returns>
     /// <path>api/2.0/settings/security/loginsettings</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("loginSettings")]
+    [HttpPut("loginSettings", Name = "updateLoginSettings")]
     public async Task<LoginSettingsDto> UpdateLoginSettingsAsync(LoginSettingsRequestDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -416,7 +416,7 @@ public class SecurityController(TenantManager tenantManager,
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.LoginSettingsDto, ASC.Web.Api">Login settings</returns>
     /// <path>api/2.0/settings/security/loginsettings</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("loginSettings")]
+    [HttpGet("loginSettings", Name = "getLoginSettings")]
     public async Task<LoginSettingsDto> GetLoginSettingsAsync()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);

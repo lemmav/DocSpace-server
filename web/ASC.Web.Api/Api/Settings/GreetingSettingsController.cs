@@ -46,7 +46,7 @@ public class GreetingSettingsController(TenantInfoSettingsHelper tenantInfoSetti
     /// <returns type="System.Object, System">Greeting settings: tenant name</returns>
     /// <path>api/2.0/settings/greetingsettings</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("")]
+    [HttpGet("", Name = "getGreetingSettings")]
     public async Task<object> GetGreetingSettings()
     {
         var tenant = await tenantManager.GetCurrentTenantAsync();
@@ -61,7 +61,7 @@ public class GreetingSettingsController(TenantInfoSettingsHelper tenantInfoSetti
     /// <returns type="System.Boolean, System">Boolean value: true if the greeting settings of the current portal are set to default</returns>
     /// <path>api/2.0/settings/greetingsettings/isdefault</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("isdefault")]
+    [HttpGet("isdefault", Name = "isDefault")]
     public async Task<bool> IsDefault()
     {
         var tenant = await tenantManager.GetCurrentTenantAsync();
@@ -77,7 +77,7 @@ public class GreetingSettingsController(TenantInfoSettingsHelper tenantInfoSetti
     /// <returns type="System.Object, System">Message about saving greeting settings successfully</returns>
     /// <path>api/2.0/settings/greetingsettings</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("")]
+    [HttpPost("", Name = "saveGreetingSettings")]
     public async Task<object> SaveGreetingSettingsAsync(GreetingSettingsRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -109,7 +109,7 @@ public class GreetingSettingsController(TenantInfoSettingsHelper tenantInfoSetti
     /// <returns type="System.Object, System">Greeting settings: tenant name</returns>
     /// <path>api/2.0/settings/greetingsettings/restore</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("restore")]
+    [HttpPost("restore", Name = "restoreGreetingSettings")]
     public async Task<object> RestoreGreetingSettingsAsync()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);

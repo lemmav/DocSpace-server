@@ -51,7 +51,7 @@ public class TipsController(ILoggerProvider option,
     /// <returns type="ASC.Web.Studio.Core.TipsSettings, ASC.Web.Core">Updated tip settings</returns>
     /// <path>api/2.0/settings/tips</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("")]
+    [HttpPut("", Name = "updateTipsSettings")]
     public async Task<TipsSettings> UpdateTipsSettingsAsync(SettingsRequestsDto inDto)
     {
         var settings = new TipsSettings { Show = inDto.Show };
@@ -96,7 +96,7 @@ public class TipsController(ILoggerProvider option,
     /// <returns type="System.Boolean, System">Boolean value: true if the user is subscribed to the tips</returns>
     /// <path>api/2.0/settings/tips/change/subscription</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("change/subscription")]
+    [HttpPut("change/subscription", Name = "updateTipsSubscription")]
     public async Task<bool> UpdateTipsSubscriptionAsync()
     {
         return await StudioPeriodicNotify.ChangeSubscriptionAsync(authContext.CurrentAccount.ID, studioNotifyHelper);
@@ -110,7 +110,7 @@ public class TipsController(ILoggerProvider option,
     /// <returns type="System.Boolean, System">Boolean value: true if the user is subscribed to the tips</returns>
     /// <path>api/2.0/settings/tips/subscription</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("subscription")]
+    [HttpGet("subscription", Name = "getTipsSubscription")]
     public async Task<bool> GetTipsSubscriptionAsync()
     {
         return await studioNotifyHelper.IsSubscribedToNotifyAsync(authContext.CurrentAccount.ID, Actions.PeriodicNotify);

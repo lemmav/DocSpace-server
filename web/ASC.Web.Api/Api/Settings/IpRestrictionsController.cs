@@ -46,7 +46,7 @@ public class IpRestrictionsController(ApiContext apiContext,
     /// <path>api/2.0/settings/iprestrictions</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("")]
+    [HttpGet("", Name = "getIpRestrictions")]
     public async Task<IEnumerable<IPRestriction>> GetIpRestrictionsAsync()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -64,7 +64,7 @@ public class IpRestrictionsController(ApiContext apiContext,
     /// <path>api/2.0/settings/iprestrictions</path>
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
-    [HttpPut("")]
+    [HttpPut("", Name = "saveIpRestrictions")]
     public async Task<IEnumerable<IpRestrictionBase>> SaveIpRestrictionsAsync(IpRestrictionsRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -86,7 +86,7 @@ public class IpRestrictionsController(ApiContext apiContext,
     /// <returns type="ASC.IPSecurity.IPRestrictionsSettings, ASC.IPSecurity">IP restriction settings</returns>
     /// <path>api/2.0/settings/iprestrictions/settings</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("settings")]
+    [HttpGet("settings", Name = "readIpRestrictionsSettings")]
     public async Task<IPRestrictionsSettings> ReadIpRestrictionsSettingsAsync()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -103,7 +103,7 @@ public class IpRestrictionsController(ApiContext apiContext,
     /// <returns type="ASC.IPSecurity.IPRestrictionsSettings, ASC.IPSecurity">Updated IP restriction settings</returns>
     /// <path>api/2.0/settings/iprestrictions/settings</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("settings")]
+    [HttpPut("settings", Name = "updateIpRestrictionsSettings")]
     public async Task<IPRestrictionsSettings> UpdateIpRestrictionsSettingsAsync(IpRestrictionsRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);

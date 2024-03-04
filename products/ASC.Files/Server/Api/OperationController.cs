@@ -47,7 +47,7 @@ public class OperationController(
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
     [AllowAnonymous]
-    [HttpPut("bulkdownload")]
+    [HttpPut("bulkdownload", Name = "bulkDownload")]
     public async IAsyncEnumerable<FileOperationDto> BulkDownload(DownloadRequestDto inDto)
     {
         var files = new List<FilesDownloadOperationItem<JsonElement>>();
@@ -80,7 +80,7 @@ public class OperationController(
     /// <path>api/2.0/files/fileops/copy</path>
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
-    [HttpPut("copy")]
+    [HttpPut("copy", Name = "copyBatchItems")]
     public async IAsyncEnumerable<FileOperationDto> CopyBatchItems(BatchRequestDto inDto)
     {
         await fileOperationsManager.PublishMoveOrCopyAsync(inDto.FolderIds, inDto.FileIds, inDto.DestFolderId, true, inDto.ConflictResolveType, !inDto.DeleteAfter, inDto.Content);
@@ -101,7 +101,7 @@ public class OperationController(
     /// <path>api/2.0/files/fileops/delete</path>
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
-    [HttpPut("delete")]
+    [HttpPut("delete", Name = "deleteBatchItems")]
     public async IAsyncEnumerable<FileOperationDto> DeleteBatchItems(DeleteBatchRequestDto inDto)
     {
         await fileOperationsManager.PublishDelete(inDto.FolderIds, inDto.FileIds, false, !inDto.DeleteAfter, inDto.Immediately);
@@ -121,7 +121,7 @@ public class OperationController(
     /// <path>api/2.0/files/fileops/emptytrash</path>
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
-    [HttpPut("emptytrash")]
+    [HttpPut("emptytrash", Name = "emptyTrash")]
     public async IAsyncEnumerable<FileOperationDto> EmptyTrashAsync()
     {
         var (foldersId, filesId) = await fileStorageService.GetTrashContentAsync();
@@ -144,7 +144,7 @@ public class OperationController(
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
     [AllowAnonymous]
-    [HttpGet("")]
+    [HttpGet("", Name = "getOperationStatuses")]
     public async IAsyncEnumerable<FileOperationDto> GetOperationStatuses()
     {
         foreach (var e in fileOperationsManager.GetOperationResults())
@@ -163,7 +163,7 @@ public class OperationController(
     /// <path>api/2.0/files/fileops/markasread</path>
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
-    [HttpPut("markasread")]
+    [HttpPut("markasread", Name = "markAsRead")]
     public async IAsyncEnumerable<FileOperationDto> MarkAsRead(BaseBatchRequestDto inDto)
     {
         await fileOperationsManager.PublishMarkAsRead(inDto.FolderIds, inDto.FileIds);
@@ -184,7 +184,7 @@ public class OperationController(
     /// <path>api/2.0/files/fileops/move</path>
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
-    [HttpPut("move")]
+    [HttpPut("move", Name = "moveBatchItems")]
     public async IAsyncEnumerable<FileOperationDto> MoveBatchItems(BatchRequestDto inDto)
     {
         await fileOperationsManager.PublishMoveOrCopyAsync(inDto.FolderIds, inDto.FileIds, inDto.DestFolderId, false, inDto.ConflictResolveType, !inDto.DeleteAfter, inDto.Content);
@@ -205,7 +205,7 @@ public class OperationController(
     /// <path>api/2.0/files/fileops/move</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("move")]
+    [HttpGet("move", Name = "moveOrCopyBatchCheck")]
     public async IAsyncEnumerable<FileEntryDto> MoveOrCopyBatchCheckAsync([ModelBinder(BinderType = typeof(BatchModelBinder))] BatchRequestDto inDto)
     {
         List<object> checkedFiles;
@@ -239,7 +239,7 @@ public class OperationController(
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
     [AllowAnonymous]
-    [HttpPut("terminate/{id?}")]
+    [HttpPut("terminate/{id?}", Name = "terminateTasks")]
     public async IAsyncEnumerable<FileOperationDto> TerminateTasks(string id = null)
     {
         var tasks = fileOperationsManager.CancelOperations(id);

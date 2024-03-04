@@ -60,7 +60,7 @@ public class ConnectionsController(UserManager userManager,
     /// <returns type="System.Object, System">Active portal connections</returns>
     /// <path>api/2.0/security/activeconnections</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("")]
+    [HttpGet("", Name = "GetAllActiveConnections")]
     public async Task<ActiveConnectionsDto> GetAllActiveConnections()
     {
         var user = await userManager.GetUsersAsync(securityContext.CurrentAccount.ID);
@@ -132,7 +132,7 @@ public class ConnectionsController(UserManager userManager,
     /// <returns type="System.Object, System">URL to the confirmation message for changing a password</returns>
     /// <path>api/2.0/security/activeconnections/logoutallchangepassword</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("logoutallchangepassword")]
+    [HttpPut("logoutallchangepassword", Name = "logOutAllActiveConnectionsChangePassword")]
     public async Task<object> LogOutAllActiveConnectionsChangePassword()
     {
         try
@@ -172,7 +172,7 @@ public class ConnectionsController(UserManager userManager,
     /// <path>api/2.0/security/activeconnections/logoutall/{userId}</path>
     /// <httpMethod>PUT</httpMethod>
     /// <returns></returns>
-    [HttpPut("logoutall/{userId:guid}")]
+    [HttpPut("logoutall/{userId:guid}", Name = "logOutAllActiveConnectionsForUser")]
     public async Task LogOutAllActiveConnectionsForUserAsync(Guid userId)
     {
         var currentUserId = securityContext.CurrentAccount.ID;
@@ -196,7 +196,7 @@ public class ConnectionsController(UserManager userManager,
     /// <returns type="System.Object, System">Current user name</returns>
     /// <path>api/2.0/security/activeconnections/logoutallexceptthis</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("logoutallexceptthis")]
+    [HttpPut("logoutallexceptthis", Name = "logOutAllExceptThisConnection")]
     public async Task<object> LogOutAllExceptThisConnection()
     {
         try
@@ -228,7 +228,7 @@ public class ConnectionsController(UserManager userManager,
     /// <returns type="System.Boolean, System">Boolean value: true if the operation is successful</returns>
     /// <path>api/2.0/security/activeconnections/logout/{loginEventId}</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("logout/{loginEventId:int}")]
+    [HttpPut("logout/{loginEventId:int}", Name = "logOutActiveConnection")]
     public async Task<bool> LogOutActiveConnection(int loginEventId)
     {
         try

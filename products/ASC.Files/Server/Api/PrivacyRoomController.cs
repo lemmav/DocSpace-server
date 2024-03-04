@@ -58,7 +58,7 @@ public abstract class PrivacyRoomController<T>(SettingsManager settingsManager,
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
     /// <visible>false</visible>
-    [HttpGet("access/{fileId}")]
+    [HttpGet("access/{fileId}", Name = "getPublicKeysWithAccess")]
     public async Task<IEnumerable<EncryptionKeyPairDto>> GetPublicKeysWithAccess(T fileId)
     {
         if (!await PrivacyRoomSettings.GetEnabledAsync(settingsManager))
@@ -92,7 +92,7 @@ public class PrivacyRoomControllerCommon(AuthContext authContext,
     /// <path>api/2.0/privacyroom/keys</path>
     /// <httpMethod>GET</httpMethod>
     /// <visible>false</visible>
-    [HttpGet("keys")]
+    [HttpGet("keys", Name = "getKeys")]
     public async Task<EncryptionKeyPairDto> GetKeysAsync()
     {
         await permissionContext.DemandPermissionsAsync(new UserSecurityProvider(authContext.CurrentAccount.ID), Constants.Action_EditUser);
@@ -114,7 +114,7 @@ public class PrivacyRoomControllerCommon(AuthContext authContext,
     /// <path>api/2.0/privacyroom</path>
     /// <httpMethod>GET</httpMethod>
     /// <visible>false</visible>
-    [HttpGet("")]
+    [HttpGet("", Name = "privacyRoom")]
     public async Task<bool> PrivacyRoomAsync()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -131,7 +131,7 @@ public class PrivacyRoomControllerCommon(AuthContext authContext,
     /// <path>api/2.0/privacyroom/keys</path>
     /// <httpMethod>PUT</httpMethod>
     /// <visible>false</visible>
-    [HttpPut("keys")]
+    [HttpPut("keys", Name = "setKeys")]
     public async Task<object> SetKeysAsync(PrivacyRoomRequestDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(new UserSecurityProvider(authContext.CurrentAccount.ID), Constants.Action_EditUser);
@@ -169,7 +169,7 @@ public class PrivacyRoomControllerCommon(AuthContext authContext,
     /// <path>api/2.0/privacyroom</path>
     /// <httpMethod>PUT</httpMethod>
     /// <visible>false</visible>
-    [HttpPut("")]
+    [HttpPut("", Name = "setPrivacyRoom")]
     public async Task<bool> SetPrivacyRoomAsync(PrivacyRoomRequestDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);

@@ -55,7 +55,7 @@ public abstract class TagsController<T>(FileStorageService fileStorageService,
     /// <path>api/2.0/files/file/{fileId}/recent</path>
     /// <httpMethod>POST</httpMethod>
     /// <visible>false</visible>
-    [HttpPost("file/{fileId}/recent")]
+    [HttpPost("file/{fileId}/recent", Name = "addToRecent")]
     public async Task<FileDto<T>> AddToRecentAsync(T fileId)
     {
         var file = await fileStorageService.GetFileAsync(fileId, -1).NotFoundIfNull("File not found");
@@ -76,7 +76,7 @@ public abstract class TagsController<T>(FileStorageService fileStorageService,
     /// <path>api/2.0/files/favorites/{fileId}</path>
     /// <httpMethod>GET</httpMethod>
     /// <visible>false</visible>
-    [HttpGet("favorites/{fileId}")]
+    [HttpGet("favorites/{fileId}", Name = "toggleFileFavorite")]
     public async Task<bool> ToggleFileFavoriteAsync(T fileId, bool favorite)
     {
         return await fileStorageService.ToggleFileFavoriteAsync(fileId, favorite);
@@ -98,7 +98,7 @@ public class TagsControllerCommon(FileStorageService fileStorageService,
     /// <path>api/2.0/files/favorites</path>
     /// <httpMethod>POST</httpMethod>
     /// <visible>false</visible>
-    [HttpPost("favorites")]
+    [HttpPost("favorites", Name = "addFavorites")]
     public async Task<bool> AddFavoritesAsync(BaseBatchRequestDto inDto)
     {
         var (folderIntIds, folderStringIds) = FileOperationsManager.GetIds(inDto.FolderIds);
@@ -119,7 +119,7 @@ public class TagsControllerCommon(FileStorageService fileStorageService,
     /// <returns type="System.Boolean, System">Boolean value: true if the operation is successful</returns>
     /// <path>api/2.0/files/templates</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("templates")]
+    [HttpPost("templates", Name = "addTemplates")]
     public async Task<bool> AddTemplatesAsync(TemplatesRequestDto inDto)
     {
         await fileStorageService.AddToTemplatesAsync(inDto.FileIds);
@@ -137,7 +137,7 @@ public class TagsControllerCommon(FileStorageService fileStorageService,
     /// <path>api/2.0/files/favorites</path>
     /// <httpMethod>DELETE</httpMethod>
     /// <visible>false</visible>
-    [HttpDelete("favorites")]
+    [HttpDelete("favorites", Name = "deleteFavoritesFromBody")]
     [Consumes("application/json")]
     public async Task<bool> DeleteFavoritesFromBodyAsync([FromBody] BaseBatchRequestDto inDto)
     {
@@ -154,7 +154,7 @@ public class TagsControllerCommon(FileStorageService fileStorageService,
     /// <path>api/2.0/files/favorites</path>
     /// <httpMethod>DELETE</httpMethod>
     /// <visible>false</visible>
-    [HttpDelete("favorites")]
+    [HttpDelete("favorites", Name = "deleteFavoritesFromQuery")]
     public async Task<bool> DeleteFavoritesFromQueryAsync([FromQuery][ModelBinder(BinderType = typeof(BaseBatchModelBinder))] BaseBatchRequestDto inDto)
     {
         return await DeleteFavoritesAsync(inDto);
@@ -169,7 +169,7 @@ public class TagsControllerCommon(FileStorageService fileStorageService,
     /// <returns type="System.Boolean, System">Boolean value: true if the operation is successful</returns>
     /// <path>api/2.0/files/templates</path>
     /// <httpMethod>DELETE</httpMethod>
-    [HttpDelete("templates")]
+    [HttpDelete("templates", Name = "deleteTemplates")]
     public async Task<bool> DeleteTemplatesAsync(IEnumerable<int> fileIds)
     {
         await fileStorageService.DeleteTemplatesAsync(fileIds);
@@ -186,7 +186,7 @@ public class TagsControllerCommon(FileStorageService fileStorageService,
     /// <returns type="Microsoft.AspNetCore.Mvc.NoContentResult, Microsoft.AspNetCore.Mvc">No content</returns>
     /// <path>api/2.0/files/recent</path>
     /// <httpMethod>DELETE</httpMethod>
-    [HttpDelete("recent")]
+    [HttpDelete("recent", Name = "deleteRecent")]
     public async Task<NoContentResult> DeleteRecentAsync(BaseBatchRequestDto inDto)
     {
         var (fileIntIds, _) = FileOperationsManager.GetIds(inDto.FileIds);

@@ -84,7 +84,7 @@ public class UserController(ICache cache,
     /// <path>api/2.0/people/active</path>
     /// <httpMethod>POST</httpMethod>
     /// <visible>false</visible>
-    [HttpPost("active")]
+    [HttpPost("active", Name = "addMemberAsActivated")]
     public async Task<EmployeeFullDto> AddMemberAsActivatedAsync(MemberRequestDto inDto)
     {
         await _permissionContext.DemandPermissionsAsync(new UserSecurityProvider(inDto.Type), Constants.Action_AddRemoveUser);
@@ -157,7 +157,7 @@ public class UserController(ICache cache,
     /// <returns type="ASC.Web.Api.Models.EmployeeFullDto, ASC.Api.Core">Newly added user with the detailed information</returns>
     /// <path>api/2.0/people</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost]
+    [HttpPost(Name = "addMember")]
     [Authorize(AuthenticationSchemes = "confirm", Roles = "LinkInvite,Everyone")]
     public async Task<EmployeeFullDto> AddMember(MemberRequestDto inDto)
     {
@@ -291,7 +291,7 @@ public class UserController(ICache cache,
     /// <path>api/2.0/people/invite</path>
     /// <httpMethod>POST</httpMethod>
     /// <collection>list</collection>
-    [HttpPost("invite")]
+    [HttpPost("invite", Name = "inviteUsers")]
     public async Task<List<EmployeeDto>> InviteUsersAsync(InviteUsersRequestDto inDto)
     {
         var currentUser = await _userManager.GetUsersAsync(authContext.CurrentAccount.ID);
@@ -333,7 +333,7 @@ public class UserController(ICache cache,
     /// <returns type="ASC.Web.Api.Models.EmployeeFullDto, ASC.Api.Core">Detailed user information</returns>
     /// <path>api/2.0/people/{userid}/password</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("{userid:guid}/password")]
+    [HttpPut("{userid:guid}/password", Name = "changeUserPassword")]
     [EnableRateLimiting("sensitive_api")]
     [Authorize(AuthenticationSchemes = "confirm", Roles = "PasswordChange,EmailChange,Activation,EmailActivation,Everyone")]
     public async Task<EmployeeFullDto> ChangeUserPassword(Guid userid, MemberRequestDto inDto)
@@ -399,7 +399,7 @@ public class UserController(ICache cache,
     /// <returns type="ASC.Web.Api.Models.EmployeeFullDto, ASC.Api.Core">Deleted user detailed information</returns>
     /// <path>api/2.0/people/{userid}</path>
     /// <httpMethod>DELETE</httpMethod>
-    [HttpDelete("{userid}")]
+    [HttpDelete("{userid}", Name = "deleteMember")]
     public async Task<EmployeeFullDto> DeleteMemberAsync(string userid)
     {
         await _permissionContext.DemandPermissionsAsync(Constants.Action_AddRemoveUser);
@@ -446,7 +446,7 @@ public class UserController(ICache cache,
     /// <returns type="ASC.Web.Api.Models.EmployeeFullDto, ASC.Api.Core">Detailed information about my profile</returns>
     /// <path>api/2.0/people/@self</path>
     /// <httpMethod>DELETE</httpMethod>
-    [HttpDelete("@self")]
+    [HttpDelete("@self", Name = "deleteProfile")]
     [Authorize(AuthenticationSchemes = "confirm", Roles = "ProfileRemove")]
     public async Task<EmployeeFullDto> DeleteProfile()
     {
@@ -498,7 +498,7 @@ public class UserController(ICache cache,
     /// <path>api/2.0/people/status/{status}/search</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("status/{status}/search")]
+    [HttpGet("status/{status}/search", Name = "getAdvanced")]
     public async IAsyncEnumerable<EmployeeFullDto> GetAdvanced(EmployeeStatus status, [FromQuery] string query)
     {
         var list = (await _userManager.GetUsersAsync(status)).ToAsyncEnumerable();
@@ -531,7 +531,7 @@ public class UserController(ICache cache,
     /// <path>api/2.0/people</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet]
+    [HttpGet(Name = "getAll")]
     public IAsyncEnumerable<EmployeeFullDto> GetAll()
     {
         return GetByStatus(EmployeeStatus.Active);
@@ -549,7 +549,7 @@ public class UserController(ICache cache,
     /// <path>api/2.0/people/email</path>
     /// <httpMethod>GET</httpMethod>
     [AllowNotPayment]
-    [HttpGet("email")]
+    [HttpGet("email", Name = "getByEmail")]
     [Authorize(AuthenticationSchemes = "confirm", Roles = "LinkInvite,Everyone")]
     public async Task<EmployeeFullDto> GetByEmailAsync([FromQuery] string email)
     {
@@ -575,7 +575,7 @@ public class UserController(ICache cache,
     /// <httpMethod>GET</httpMethod>
     [AllowNotPayment]
     [Authorize(AuthenticationSchemes = "confirm", Roles = "LinkInvite,Everyone")]
-    [HttpGet("{username}", Order = 1)]
+    [HttpGet("{username}", Name = "getById", Order = 1)]
     public async Task<EmployeeFullDto> GetById(string username)
     {
         var isInvite = _httpContextAccessor.HttpContext!.User.Claims
@@ -621,7 +621,7 @@ public class UserController(ICache cache,
     /// <path>api/2.0/people/status/{status}</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("status/{status}")]
+    [HttpGet("status/{status}", Name = "getByStatus")]
     public IAsyncEnumerable<EmployeeFullDto> GetByStatus(EmployeeStatus status)
     {
         Guid? groupId = null;
@@ -656,7 +656,7 @@ public class UserController(ICache cache,
     /// <path>api/2.0/people/filter</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("filter")]
+    [HttpGet("filter", Name = "getFullByFilter")]
     public async IAsyncEnumerable<EmployeeFullDto> GetFullByFilter(EmployeeStatus? employeeStatus,
         Guid? groupId,
         EmployeeActivationStatus? activationStatus,
@@ -686,7 +686,7 @@ public class UserController(ICache cache,
     /// <path>api/2.0/people/info</path>
     /// <httpMethod>GET</httpMethod>
     /// <visible>false</visible>
-    [HttpGet("info")]
+    [HttpGet("info", Name = "getModule")]
     public Module GetModule()
     {
         var product = new PeopleProduct();
@@ -705,7 +705,7 @@ public class UserController(ICache cache,
     /// <path>api/2.0/people/search</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("search")]
+    [HttpGet("search", Name = "getPeopleSearch")]
     public IAsyncEnumerable<EmployeeDto> GetPeopleSearch([FromQuery] string query)
     {
         return GetSearch(query);
@@ -721,7 +721,7 @@ public class UserController(ICache cache,
     /// <path>api/2.0/people/@search/{query}</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("@search/{query}")]
+    [HttpGet("@search/{query}", Name = "getSearch")]
     public async IAsyncEnumerable<EmployeeFullDto> GetSearch(string query)
     {
         var groupId = Guid.Empty;
@@ -760,7 +760,7 @@ public class UserController(ICache cache,
     /// <path>api/2.0/people/simple/filter</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("simple/filter")]
+    [HttpGet("simple/filter", Name = "getSimpleByFilter")]
     public async IAsyncEnumerable<EmployeeDto> GetSimpleByFilter(EmployeeStatus? employeeStatus,
         Guid? groupId,
         EmployeeActivationStatus? activationStatus,
@@ -793,7 +793,7 @@ public class UserController(ICache cache,
     /// <path>api/2.0/people/delete</path>
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
-    [HttpPut("delete", Order = -1)]
+    [HttpPut("delete", Name = "removeUsers", Order = -1)]
     public async IAsyncEnumerable<EmployeeFullDto> RemoveUsers(UpdateMembersRequestDto inDto)
     {
         await _permissionContext.DemandPermissionsAsync(Constants.Action_AddRemoveUser);
@@ -839,7 +839,7 @@ public class UserController(ICache cache,
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
     [AllowNotPayment]
-    [HttpPut("invite")]
+    [HttpPut("invite", Name = "resendUserInvites")]
     public async IAsyncEnumerable<EmployeeFullDto> ResendUserInvitesAsync(UpdateMembersRequestDto inDto)
     {
         List<UserInfo> users;
@@ -925,7 +925,7 @@ public class UserController(ICache cache,
     /// <returns type="ASC.Web.Core.Users.DarkThemeSettings, ASC.Web.Core">Theme</returns>
     /// <path>api/2.0/people/theme</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("theme")]
+    [HttpGet("theme", Name = "getTheme")]
     public async Task<DarkThemeSettings> GetThemeAsync()
     {
         return await settingsManager.LoadForCurrentUserAsync<DarkThemeSettings>();
@@ -942,7 +942,7 @@ public class UserController(ICache cache,
     /// <returns type="ASC.Web.Core.Users.DarkThemeSettings, ASC.Web.Core">Theme</returns>
     /// <path>api/2.0/people/theme</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("theme")]
+    [HttpPut("theme", Name = "changeTheme")]
     public async Task<DarkThemeSettings> ChangeThemeAsync(DarkThemeSettingsRequestDto inDto)
     {
         var darkThemeSettings = new DarkThemeSettings
@@ -966,7 +966,7 @@ public class UserController(ICache cache,
     /// <path>api/2.0/people/@self</path>
     /// <httpMethod>GET</httpMethod>
     [AllowNotPayment]
-    [HttpGet("@self")]
+    [HttpGet("@self", Name = "self")]
     public async Task<EmployeeFullDto> SelfAsync()
     {
         var user = await _userManager.GetUserAsync(securityContext.CurrentAccount.ID, EmployeeFullDtoHelper.GetExpression(_apiContext));
@@ -990,7 +990,7 @@ public class UserController(ICache cache,
     /// <path>api/2.0/people/email</path>
     /// <httpMethod>POST</httpMethod>
     [AllowNotPayment]
-    [HttpPost("email")]
+    [HttpPost("email", Name = "sendEmailChangeInstructions")]
     public async Task<object> SendEmailChangeInstructionsAsync(UpdateMemberRequestDto inDto)
     {
         Guid.TryParse(inDto.UserId, out var userid);
@@ -1081,7 +1081,7 @@ public class UserController(ICache cache,
     /// <requiresAuthorization>false</requiresAuthorization>
     [AllowNotPayment]
     [AllowAnonymous]
-    [HttpPost("password")]
+    [HttpPost("password", Name = "sendUserPassword")]
     [EnableRateLimiting("sensitive_api")]
     public async Task<object> SendUserPasswordAsync(MemberRequestDto inDto)
     {
@@ -1118,7 +1118,7 @@ public class UserController(ICache cache,
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
     [AllowNotPayment]
-    [HttpPut("activationstatus/{activationstatus}")]
+    [HttpPut("activationstatus/{activationstatus}", Name = "updateEmployeeActivationStatus")]
     [Authorize(AuthenticationSchemes = "confirm", Roles = "Activation,Everyone")]
     public async IAsyncEnumerable<EmployeeFullDto> UpdateEmployeeActivationStatus(EmployeeActivationStatus activationstatus, UpdateMembersRequestDto inDto)
     {
@@ -1165,7 +1165,7 @@ public class UserController(ICache cache,
     /// <returns type="ASC.Web.Api.Models.EmployeeFullDto, ASC.Api.Core">Detailed user information</returns>
     /// <path>api/2.0/people/{userid}/culture</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("{userid}/culture")]
+    [HttpPut("{userid}/culture", Name = "updateMemberCulture")]
     public async Task<EmployeeFullDto> UpdateMemberCulture(string userid, UpdateMemberRequestDto inDto)
     {
         var user = await GetUserInfoAsync(userid);
@@ -1212,7 +1212,7 @@ public class UserController(ICache cache,
     /// <returns type="ASC.Web.Api.Models.EmployeeFullDto, ASC.Api.Core">Updated user with the detailed information</returns>
     /// <path>api/2.0/people/{userid}</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("{userid}", Order = 1)]
+    [HttpPut("{userid}", Name = "updateMember", Order = 1)]
     public async Task<EmployeeFullDto> UpdateMember(string userid, UpdateMemberRequestDto inDto)
     {
         var user = await GetUserInfoAsync(userid);
@@ -1370,7 +1370,7 @@ public class UserController(ICache cache,
     /// <path>api/2.0/people/status/{status}</path>
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
-    [HttpPut("status/{status}")]
+    [HttpPut("status/{status}", Name = "updateUserStatus")]
     public async IAsyncEnumerable<EmployeeFullDto> UpdateUserStatus(EmployeeStatus status, UpdateMembersRequestDto inDto)
     {
         await _permissionContext.DemandPermissionsAsync(Constants.Action_EditUser);
@@ -1453,7 +1453,7 @@ public class UserController(ICache cache,
     /// <path>api/2.0/people/type/{type}</path>
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
-    [HttpPut("type/{type}")]
+    [HttpPut("type/{type}", Name = "updateUserType")]
     public async IAsyncEnumerable<EmployeeFullDto> UpdateUserTypeAsync(EmployeeType type, UpdateMembersRequestDto inDto)
     {
         await _permissionContext.DemandPermissionsAsync(new UserSecurityProvider(type), Constants.Action_AddRemoveUser);
@@ -1489,7 +1489,7 @@ public class UserController(ICache cache,
     /// <httpMethod>GET</httpMethod>
     /// <returns></returns>
     /// <visible>false</visible>
-    [HttpGet("recalculatequota")]
+    [HttpGet("recalculatequota", Name = "recalculateQuota")]
     public async Task RecalculateQuotaAsync()
     {
         await _permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -1507,7 +1507,7 @@ public class UserController(ICache cache,
     /// <path>api/2.0/people/checkrecalculatequota</path>
     /// <httpMethod>GET</httpMethod>
     /// <visible>false</visible>
-    [HttpGet("checkrecalculatequota")]
+    [HttpGet("checkrecalculatequota", Name = "checkRecalculateQuota")]
     public async Task<TaskProgressDto> CheckRecalculateQuotaAsync()
     {
         await _permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -1526,7 +1526,7 @@ public class UserController(ICache cache,
     /// <path>api/2.0/people/userquota</path>
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
-    [HttpPut("userquota")]
+    [HttpPut("userquota", Name = "updateUserQuota")]
     public async IAsyncEnumerable<EmployeeFullDto> UpdateUserQuotaAsync(UpdateMembersQuotaRequestDto inDto)
     {
         await _permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -1570,7 +1570,7 @@ public class UserController(ICache cache,
     /// <returns type="ASC.Web.Api.Models.EmployeeFullDto, ASC.Api.Core">User detailed information</returns>
     /// <path>api/2.0/people/resetquota</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("resetquota")]
+    [HttpPut("resetquota", Name = "resetUsersQuota")]
     public async IAsyncEnumerable<EmployeeFullDto> ResetUsersQuota(UpdateMembersQuotaRequestDto inDto)
     {
         var users = await inDto.UserIds.ToAsyncEnumerable()

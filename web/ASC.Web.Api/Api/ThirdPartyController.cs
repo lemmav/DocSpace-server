@@ -45,7 +45,7 @@ public class ThirdPartyController(OAuth20TokenHelper oAuth20TokenHelper) : Contr
     /// <remarks>List of providers: Google, Dropbox, Docusign, Box, OneDrive, Wordpress.</remarks>
     /// <path>api/2.0/thirdparty/{provider}</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("{provider}")]
+    [HttpGet("{provider}", Name = "getProvider")]
     public object Get(LoginProvider provider)
     {
         var desktop = HttpContext.Request.Query["desktop"] == "true";
@@ -89,7 +89,7 @@ public class ThirdPartyController(OAuth20TokenHelper oAuth20TokenHelper) : Contr
     /// <returns type="System.Object, System">Confirmation code</returns>
     /// <path>api/2.0/thirdparty/{provider}/code</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("{provider}/code")]
+    [HttpGet("{provider}/code", Name = "getCode")]
     public object GetCode(string redirect, string code, string error)
     {
         try

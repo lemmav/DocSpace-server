@@ -75,7 +75,7 @@ public abstract class UploadController<T>(UploadControllerHelper filesController
     /// </returns>
     /// <path>api/2.0/files/{folderId}/upload/create_session</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("{folderId}/upload/create_session")]
+    [HttpPost("{folderId}/upload/create_session", Name = "createUploadSession")]
     public async Task<object> CreateUploadSessionAsync(T folderId, SessionRequestDto inDto)
     {
         return await filesControllerHelper.CreateUploadSessionAsync(folderId, inDto.FileName, inDto.FileSize, inDto.RelativePath, inDto.Encrypted, inDto.CreateOn, inDto.CreateNewIfExist);
@@ -103,13 +103,13 @@ public abstract class UploadController<T>(UploadControllerHelper filesController
     /// </returns>
     /// <path>api/2.0/files/file/{fileId}/edit_session</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("file/{fileId}/edit_session")]
+    [HttpPost("file/{fileId}/edit_session", Name = "createEditSession")]
     public async Task<object> CreateEditSession(T fileId, long fileSize)
     {
         return await filesControllerHelper.CreateEditSessionAsync(fileId, fileSize);
     }
 
-    [HttpPost("{folderId}/upload/check")]
+    [HttpPost("{folderId}/upload/check", Name = "checkUpload")]
     public Task<List<string>> CheckUploadAsync(T folderId, CheckUploadRequestDto model)
     {
         return filesControllerHelper.CheckUploadAsync(folderId, model.FilesTitle);
@@ -125,7 +125,7 @@ public abstract class UploadController<T>(UploadControllerHelper filesController
     /// <returns type="ASC.Files.Core.ApiModels.ResponseDto.FileDto, ASC.Files.Core">Inserted file informationy</returns>
     /// <path>api/2.0/files/{folderId}/insert</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("{folderId}/insert", Order = 1)]
+    [HttpPost("{folderId}/insert", Order = 1, Name = "insertFile")]
     public async Task<FileDto<T>> InsertFileAsync(T folderId, [FromForm][ModelBinder(BinderType = typeof(InsertFileModelBinder))] InsertFileRequestDto inDto)
     {
         return await filesControllerHelper.InsertFileAsync(folderId, inDto.Stream, inDto.Title, inDto.CreateNewIfExist, inDto.KeepConvertStatus);
@@ -150,7 +150,7 @@ public abstract class UploadController<T>(UploadControllerHelper filesController
     /// <returns type="System.Object, System">Uploaded file(s)</returns>
     /// <path>api/2.0/files/{folderId}/upload</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("{folderId}/upload", Order = 1)]
+    [HttpPost("{folderId}/upload", Order = 1, Name = "uploadFile")]
     public async Task<object> UploadFileAsync(T folderId, [ModelBinder(BinderType = typeof(UploadModelBinder))] UploadRequestDto inDto)
     {
         return await filesControllerHelper.UploadFileAsync(folderId, inDto);
@@ -173,7 +173,7 @@ public class UploadControllerCommon(GlobalFolderHelper globalFolderHelper,
     /// <path>api/2.0/files/@common/insert</path>
     /// <httpMethod>POST</httpMethod>
     /// <visible>false</visible>
-    [HttpPost("@common/insert")]
+    [HttpPost("@common/insert", Name = "insertFileToCommonFromBody")]
     public async Task<FileDto<int>> InsertFileToCommonFromBodyAsync([FromForm][ModelBinder(BinderType = typeof(InsertFileModelBinder))] InsertFileRequestDto inDto)
     {
         return await filesControllerHelper.InsertFileAsync(await globalFolderHelper.FolderCommonAsync, inDto.Stream, inDto.Title, inDto.CreateNewIfExist, inDto.KeepConvertStatus);
@@ -188,7 +188,7 @@ public class UploadControllerCommon(GlobalFolderHelper globalFolderHelper,
     /// <returns type="ASC.Files.Core.ApiModels.ResponseDto.FileDto, ASC.Files.Core">Inserted file</returns>
     /// <path>api/2.0/files/@my/insert</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("@my/insert")]
+    [HttpPost("@my/insert", Name = "insertFileToMyFromBody")]
     public async Task<FileDto<int>> InsertFileToMyFromBodyAsync([FromForm][ModelBinder(BinderType = typeof(InsertFileModelBinder))] InsertFileRequestDto inDto)
     {
         return await filesControllerHelper.InsertFileAsync(await globalFolderHelper.FolderMyAsync, inDto.Stream, inDto.Title, inDto.CreateNewIfExist, inDto.KeepConvertStatus);
@@ -212,7 +212,7 @@ public class UploadControllerCommon(GlobalFolderHelper globalFolderHelper,
     /// <path>api/2.0/files/@common/upload</path>
     /// <httpMethod>POST</httpMethod>
     /// <visible>false</visible>
-    [HttpPost("@common/upload")]
+    [HttpPost("@common/upload", Name = "uploadFileToCommon")]
     public async Task<object> UploadFileToCommonAsync([ModelBinder(BinderType = typeof(UploadModelBinder))] UploadRequestDto inDto)
     {
         inDto.CreateNewIfExist = false;
@@ -237,7 +237,7 @@ public class UploadControllerCommon(GlobalFolderHelper globalFolderHelper,
     /// <returns type="System.Object, System">Uploaded file(s)</returns>
     /// <path>api/2.0/files/@my/upload</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("@my/upload")]
+    [HttpPost("@my/upload", Name = "uploadFileToMy")]
     public async Task<object> UploadFileToMyAsync([ModelBinder(BinderType = typeof(UploadModelBinder))] UploadRequestDto inDto)
     {
         inDto.CreateNewIfExist = false;

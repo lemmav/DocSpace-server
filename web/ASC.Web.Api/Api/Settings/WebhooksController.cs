@@ -49,7 +49,7 @@ public class WebhooksController(ApiContext context,
     /// <httpMethod>GET</httpMethod>
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.WebhooksConfigDto, ASC.Web.Api">List of tenant webhooks with their config parameters</returns>
     /// <collection>list</collection>
-    [HttpGet("webhook")]
+    [HttpGet("webhook", Name = "getTenantWebhooks")]
     public async IAsyncEnumerable<WebhooksConfigWithStatusDto> GetTenantWebhooks()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -71,7 +71,7 @@ public class WebhooksController(ApiContext context,
     /// <path>api/2.0/settings/webhook</path>
     /// <httpMethod>POST</httpMethod>
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.WebhooksConfigDto, ASC.Web.Api">Tenant webhook with its config parameters</returns>
-    [HttpPost("webhook")]
+    [HttpPost("webhook", Name = "createWebhook")]
     public async Task<WebhooksConfigDto> CreateWebhook(WebhooksConfigRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -96,7 +96,7 @@ public class WebhooksController(ApiContext context,
     /// <path>api/2.0/settings/webhook</path>
     /// <httpMethod>PUT</httpMethod>
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.WebhooksConfigDto, ASC.Web.Api">Updated tenant webhook with its config parameters</returns>
-    [HttpPut("webhook")]
+    [HttpPut("webhook", Name = "updateWebhook")]
     public async Task<WebhooksConfigDto> UpdateWebhook(WebhooksConfigRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -120,7 +120,7 @@ public class WebhooksController(ApiContext context,
     /// <path>api/2.0/settings/webhook</path>
     /// <httpMethod>DELETE</httpMethod>
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.WebhooksConfigDto, ASC.Web.Api">Tenant webhook with its config parameters</returns>
-    [HttpDelete("webhook/{id:int}")]
+    [HttpDelete("webhook/{id:int}", Name = "removeWebhook")]
     public async Task<WebhooksConfigDto> RemoveWebhook(int id)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -148,7 +148,7 @@ public class WebhooksController(ApiContext context,
     /// <httpMethod>GET</httpMethod>
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.WebhooksLogDto, ASC.Web.Api">Logs of the webhook activities</returns>
     /// <collection>list</collection>
-    [HttpGet("webhooks/log")]
+    [HttpGet("webhooks/log", Name = "getWebhookJournal")]
     public async IAsyncEnumerable<WebhooksLogDto> GetJournal(DateTime? deliveryFrom, DateTime? deliveryTo, string hookUri, int? webhookId, int? configId, int? eventId, WebhookGroupStatus? groupStatus)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -176,7 +176,7 @@ public class WebhooksController(ApiContext context,
     /// <path>api/2.0/settings/webhook/{id}/retry</path>
     /// <httpMethod>PUT</httpMethod>
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.WebhooksLogDto, ASC.Web.Api">Logs of the webhook activities</returns>
-    [HttpPut("webhook/{id:int}/retry")]
+    [HttpPut("webhook/{id:int}/retry", Name = "retryWebhook")]
     public async Task<WebhooksLogDto> RetryWebhook(int id)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -210,7 +210,7 @@ public class WebhooksController(ApiContext context,
     /// <httpMethod>PUT</httpMethod>
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.WebhooksLogDto, ASC.Web.Api">Logs of the webhook activities</returns>
     /// <collection>list</collection>
-    [HttpPut("webhook/retry")]
+    [HttpPut("webhook/retry", Name = "retryWebhooks")]
     public async IAsyncEnumerable<WebhooksLogDto> RetryWebhooks(WebhookRetryRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -241,7 +241,7 @@ public class WebhooksController(ApiContext context,
     /// <httpMethod>GET</httpMethod>
     /// <returns type="ASC.Webhooks.Core.Webhook, ASC.Webhooks.Core">List of webhook settings</returns>
     /// <collection>list</collection>
-    [HttpGet("webhooks")]
+    [HttpGet("webhooks", Name = "getWebhookSettings")]
     public async IAsyncEnumerable<Webhook> Settings()
     {
         var settings = await settingsManager.LoadAsync<WebHooksSettings>();
@@ -264,7 +264,7 @@ public class WebhooksController(ApiContext context,
     /// <path>api/2.0/settings/webhook/{id}</path>
     /// <httpMethod>PUT</httpMethod>
     /// <returns type="ASC.Webhooks.Core.Webhook, ASC.Webhooks.Core">Webhook settings</returns>
-    [HttpPut("webhook/{id:int}")]
+    [HttpPut("webhook/{id:int}", Name = "disableWebHook")]
     public async Task<Webhook> DisableWebHook(int id)
     {
         var settings = await settingsManager.LoadAsync<WebHooksSettings>();

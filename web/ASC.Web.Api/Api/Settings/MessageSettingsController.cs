@@ -55,7 +55,7 @@ public class MessageSettingsController(MessageService messageService,
     /// <returns type="System.Object, System">Message about the result of saving new settings</returns>
     /// <path>api/2.0/settings/messagesettings</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("messagesettings")]
+    [HttpPost("messagesettings", Name = "enableAdminMessageSettings")]
     public async Task<object> EnableAdminMessageSettingsAsync(AdminMessageSettingsRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -77,7 +77,7 @@ public class MessageSettingsController(MessageService messageService,
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.CookieSettingsDto, ASC.Web.Api">Lifetime value in minutes</returns>
     /// <path>api/2.0/settings/cookiesettings</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("cookiesettings")]
+    [HttpGet("cookiesettings", Name = "getCookieSettings")]
     public async Task<CookieSettingsDto> GetCookieSettings()
     {        
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -100,7 +100,7 @@ public class MessageSettingsController(MessageService messageService,
     /// <returns type="System.Object, System">Message about the result of saving new settings</returns>
     /// <path>api/2.0/settings/cookiesettings</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("cookiesettings")]
+    [HttpPut("cookiesettings", Name = "updateCookieSettings")]
     public async Task<object> UpdateCookieSettings(CookieSettingsRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -130,7 +130,7 @@ public class MessageSettingsController(MessageService messageService,
     /// <httpMethod>POST</httpMethod>
     /// <requiresAuthorization>false</requiresAuthorization>
     [AllowAnonymous, AllowNotPayment]
-    [HttpPost("sendadmmail")]
+    [HttpPost("sendadmmail", Name = "sendAdmMail")]
     public async Task<object> SendAdmMailAsync(AdminMessageSettingsRequestsDto inDto)
     {
         var studioAdminMessageSettings = await settingsManager.LoadAsync<StudioAdminMessageSettings>();
@@ -174,7 +174,7 @@ public class MessageSettingsController(MessageService messageService,
     /// <httpMethod>POST</httpMethod>
     /// <requiresAuthorization>false</requiresAuthorization>
     [AllowAnonymous]
-    [HttpPost("sendjoininvite")]
+    [HttpPost("sendjoininvite", Name = "sendJoinInviteMail")]
     public async Task<object> SendJoinInviteMail(AdminMessageSettingsRequestsDto inDto)
     {
         try

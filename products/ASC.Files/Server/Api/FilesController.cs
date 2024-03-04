@@ -60,7 +60,7 @@ public class FilesControllerThirdparty(FilesControllerHelper filesControllerHelp
     /// <returns type="ASC.Files.Core.ApiModels.ResponseDto.FileEntryDto, ASC.Files.Core">File entry information</returns>
     /// <path>api/2.0/files/file/app-{fileId}</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("file/app-{fileId}", Order = 1)]
+    [HttpGet("file/app-{fileId}", Order = 1, Name = "getFileInfoThirdParty")]
     public async Task<FileEntryDto> GetFileInfoThirdPartyAsync(string fileId)
     {
         fileId = "app-" + fileId;
@@ -92,7 +92,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <path>api/2.0/files/file/{fileId}/history</path>
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
-    [HttpPut("file/{fileId}/history")]
+    [HttpPut("file/{fileId}/history", Name = "changeHistory")]
     public IAsyncEnumerable<FileDto<T>> ChangeHistoryAsync(T fileId, ChangeHistoryRequestDto inDto)
     {
         return filesControllerHelper.ChangeHistoryAsync(fileId, inDto.Version, inDto.ContinueVersion);
@@ -109,7 +109,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <path>api/2.0/files/file/{fileId}/checkconversion</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("file/{fileId}/checkconversion")]
+    [HttpGet("file/{fileId}/checkconversion", Name = "checkConversion")]
     public async IAsyncEnumerable<ConversationResultDto> CheckConversionAsync(T fileId, bool start)
     {
         await foreach (var r in filesControllerHelper.CheckConversionAsync(new CheckConversionRequestDto<T>
@@ -131,8 +131,8 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <returns type="System.String, System">File download link</returns>
     /// <path>api/2.0/files/file/{fileId}/presigneduri</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("file/{fileId}/presigneduri")]
-    public async Task<string> GetPresignedUri(T fileId)
+    [HttpGet("file/{fileId}/presigneduri", Name = "getPreSignedStreamUri")]
+    public async Task<string> GetPreSignedUri(T fileId)
     {
         return await filesControllerHelper.GetPresignedUri(fileId);
     }
@@ -147,7 +147,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <returns type="ASC.Files.Core.ApiModels.ResponseDto.FileEntryDto, ASC.Files.Core">Copied file entry information</returns>
     /// <path>api/2.0/files/file/{fileId}/copyas</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("file/{fileId}/copyas")]
+    [HttpPost("file/{fileId}/copyas", Name = "copyFileAs")]
     public async Task<FileEntryDto> CopyFileAs(T fileId, CopyAsRequestDto<JsonElement> inDto)
     {
         if (inDto.DestFolderId.ValueKind == JsonValueKind.Number)
@@ -174,7 +174,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <returns type="ASC.Files.Core.ApiModels.ResponseDto.FileDto, ASC.Files.Core">New file information</returns>
     /// <path>api/2.0/files/{folderId}/file</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("{folderId}/file")]
+    [HttpPost("{folderId}/file", Name = "createFile")]
     public async Task<FileDto<T>> CreateFileAsync(T folderId, CreateFileRequestDto<JsonElement> inDto)
     {
         return await filesControllerHelper.CreateFileAsync(folderId, inDto.Title, inDto.TemplateId, inDto.FormId, inDto.EnableExternalExt);
@@ -190,7 +190,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <returns type="ASC.Files.Core.ApiModels.ResponseDto.FileDto, ASC.Files.Core">New file information</returns>
     /// <path>api/2.0/files/{folderId}/html</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("{folderId}/html")]
+    [HttpPost("{folderId}/html", Name = "createHtmlFile")]
     public async Task<FileDto<T>> CreateHtmlFileAsync(T folderId, CreateTextOrHtmlFileRequestDto inDto)
     {
         return await filesControllerHelper.CreateHtmlFileAsync(folderId, inDto.Title, inDto.Content, !inDto.CreateNewIfExist);
@@ -206,7 +206,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <returns type="ASC.Files.Core.ApiModels.ResponseDto.FileDto, ASC.Files.Core">New file information</returns>
     /// <path>api/2.0/files/{folderId}/text</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("{folderId}/text")]
+    [HttpPost("{folderId}/text", Name = "createTextFile")]
     public async Task<FileDto<T>> CreateTextFileAsync(T folderId, CreateTextOrHtmlFileRequestDto inDto)
     {
         return await filesControllerHelper.CreateTextFileAsync(folderId, inDto.Title, inDto.Content, !inDto.CreateNewIfExist);
@@ -223,7 +223,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <path>api/2.0/files/file/{fileId}</path>
     /// <httpMethod>DELETE</httpMethod>
     /// <collection>list</collection>
-    [HttpDelete("file/{fileId}")]
+    [HttpDelete("file/{fileId}", Name = "deleteFile")]
     public async IAsyncEnumerable<FileOperationDto> DeleteFile(T fileId, [FromBody] DeleteRequestDto inDto)
     {
         await fileOperationsManager.PublishDelete(new List<T>(), new List<T> { fileId }, false, !inDto.DeleteAfter, inDto.Immediately);
@@ -247,7 +247,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <httpMethod>GET</httpMethod>
     /// <requiresAuthorization>false</requiresAuthorization>
     [AllowAnonymous]
-    [HttpGet("file/{fileId}/edit/diff")]
+    [HttpGet("file/{fileId}/edit/diff", Name = "getEditDiffUrl")]
     public async Task<EditHistoryDataDto> GetEditDiffUrlAsync(T fileId, int version = 0, string doc = null)
     {
         return await filesControllerHelper.GetEditDiffUrlAsync(fileId, version, doc);
@@ -266,7 +266,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <requiresAuthorization>false</requiresAuthorization>
     /// <collection>list</collection>
     [AllowAnonymous]
-    [HttpGet("file/{fileId}/edit/history")]
+    [HttpGet("file/{fileId}/edit/history", Name = "getEditHistory")]
     public IAsyncEnumerable<EditHistoryDto> GetEditHistoryAsync(T fileId, string doc = null)
     {
         return filesControllerHelper.GetEditHistoryAsync(fileId, doc);
@@ -283,7 +283,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <path>api/2.0/files/file/{fileId}</path>
     /// <httpMethod>GET</httpMethod>
     [AllowAnonymous]
-    [HttpGet("file/{fileId}")]
+    [HttpGet("file/{fileId}", Name = "getFileInfo")]
     public async Task<FileDto<T>> GetFileInfoAsync(T fileId, int version = -1)
     {
         return await filesControllerHelper.GetFileInfoAsync(fileId, version);
@@ -301,7 +301,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
     [AllowAnonymous]
-    [HttpGet("file/{fileId}/history")]
+    [HttpGet("file/{fileId}/history", Name = "getFileVersionInfo")]
     public IAsyncEnumerable<FileDto<T>> GetFileVersionInfoAsync(T fileId)
     {
         return filesControllerHelper.GetFileVersionInfoAsync(fileId);
@@ -317,7 +317,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <returns type="ASC.Files.Core.ApiModels.ResponseDto.FileDto, ASC.Files.Core">Locked file information</returns>
     /// <path>api/2.0/files/file/{fileId}/lock</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("file/{fileId}/lock")]
+    [HttpPut("file/{fileId}/lock", Name = "lockFile")]
     public async Task<FileDto<T>> LockFileAsync(T fileId, LockFileRequestDto inDto)
     {
         return await filesControllerHelper.LockFileAsync(fileId, inDto.LockFile);
@@ -338,7 +338,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <requiresAuthorization>false</requiresAuthorization>
     /// <collection>list</collection>
     [AllowAnonymous]
-    [HttpGet("file/{fileId}/restoreversion")]
+    [HttpGet("file/{fileId}/restoreversion", Name = "restoreVersion")]
     public IAsyncEnumerable<EditHistoryDto> RestoreVersionAsync(T fileId, int version = 0, string url = null, string doc = null)
     {
         return filesControllerHelper.RestoreVersionAsync(fileId, version, url, doc);
@@ -355,7 +355,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <path>api/2.0/files/file/{fileId}/checkconversion</path>
     /// <httpMethod>PUT</httpMethod>
     /// <collection>list</collection>
-    [HttpPut("file/{fileId}/checkconversion")]
+    [HttpPut("file/{fileId}/checkconversion", Name = "startConversion")]
     public IAsyncEnumerable<ConversationResultDto> StartConversion(T fileId, [FromBody(EmptyBodyBehavior = EmptyBodyBehavior.Allow)] CheckConversionRequestDto<T> inDto)
     {
         inDto ??= new CheckConversionRequestDto<T>();
@@ -374,7 +374,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <returns type="System.Object, System">Updated comment</returns>
     /// <path>api/2.0/files/file/{fileId}/comment</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("file/{fileId}/comment")]
+    [HttpPut("file/{fileId}/comment", Name = "updateComment")]
     public async Task<object> UpdateCommentAsync(T fileId, UpdateCommentRequestDto inDto)
     {
         return await filesControllerHelper.UpdateCommentAsync(fileId, inDto.Version, inDto.Comment);
@@ -391,7 +391,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <path>api/2.0/files/file/{fileId}</path>
     /// <httpMethod>PUT</httpMethod>
     [AllowAnonymous]
-    [HttpPut("file/{fileId}")]
+    [HttpPut("file/{fileId}", Name = "updateFile")]
     public async Task<FileDto<T>> UpdateFileAsync(T fileId, UpdateFileRequestDto inDto)
     {
         return await filesControllerHelper.UpdateFileAsync(fileId, inDto.Title, inDto.LastVersion);
@@ -408,7 +408,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <httpMethod>PUT</httpMethod>
     /// <returns type="ASC.Files.Core.ApiModels.ResponseDto.FileDto, ASC.Files.Core">Updated file information</returns>
     /// <visible>false</visible>
-    [HttpPut("{fileId}/update")]
+    [HttpPut("{fileId}/update", Name = "updateFileStreamFromForm")]
     public async Task<FileDto<T>> UpdateFileStreamFromFormAsync(T fileId, [FromForm] FileStreamRequestDto inDto)
     {
         return await filesControllerHelper.UpdateFileStreamAsync(filesControllerHelper.GetFileFromRequest(inDto).OpenReadStream(), fileId, inDto.FileExtension, inDto.Encrypted, inDto.Forcesave);
@@ -423,7 +423,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <returns type="ASC.Files.Core.ApiModels.ResponseDto.FileShareDto, ASC.Files.Core">Security information of file</returns>
     /// <path>api/2.0/files/file/{id}/link</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("file/{id}/link")]
+    [HttpGet("file/{id}/link", Name = "getFilePrimaryExternalLink")]
     public async Task<FileShareDto> GetPrimaryExternalLinkAsync(T id)
     {
         var linkAce = await fileStorageService.GetPrimaryExternalLinkAsync(id, FileEntryType.File);
@@ -431,7 +431,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
         return await fileShareDtoHelper.Get(linkAce);
     }
 
-    [HttpPut("{fileId}/order")]
+    [HttpPut("{fileId}/order", Name = "setFileOrder")]
     public async Task SetOrder(T fileId, OrderRequestDto inDto)
     {
         await fileStorageService.SetFileOrder(fileId, inDto.Order);
@@ -447,7 +447,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <path>api/2.0/files/file/{id}/links</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("file/{fileId}/links")]
+    [HttpGet("file/{fileId}/links", Name = "getFileLinks")]
     public async IAsyncEnumerable<FileShareDto> GetLinksAsync(T fileId)
     {
         var offset = Convert.ToInt32(apiContext.StartIndex);
@@ -473,7 +473,7 @@ public abstract class FilesController<T>(FilesControllerHelper filesControllerHe
     /// <returns type="ASC.Files.Core.ApiModels.ResponseDto.FileShareDto, ASC.Files.Core">Security information of file</returns>
     /// <path>api/2.0/files/file/{id}/links</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("file/{id}/links")]
+    [HttpPut("file/{id}/links", Name = "setExternalLink")]
     public async Task<FileShareDto> SetExternalLinkAsync(T id, FileLinkRequestDto inDto)
     {
         var linkAce = await fileStorageService.SetExternalLinkAsync(id, FileEntryType.File, inDto.LinkId, null, inDto.Access, requiredAuth: inDto.Internal, 
@@ -501,7 +501,7 @@ public class FilesControllerCommon(
     /// <returns type="ASC.Files.Core.ApiModels.ResponseDto.FileDto, ASC.Files.Core">New file information</returns>
     /// <path>api/2.0/files/@my/file</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("@my/file")]
+    [HttpPost("@my/file", Name = "createFileInMy")]
     public async Task<FileDto<int>> CreateFileAsync(CreateFileRequestDto<JsonElement> inDto)
     {
         return await filesControllerHelperInternal.CreateFileAsync(await globalFolderHelper.FolderMyAsync, inDto.Title, inDto.TemplateId, inDto.FormId, inDto.EnableExternalExt);
@@ -517,7 +517,7 @@ public class FilesControllerCommon(
     /// <path>api/2.0/files/@common/html</path>
     /// <httpMethod>POST</httpMethod>
     /// <visible>false</visible>
-    [HttpPost("@common/html")]
+    [HttpPost("@common/html", Name = "createHtmlFileInCommon")]
     public async Task<FileDto<int>> CreateHtmlFileInCommonAsync(CreateTextOrHtmlFileRequestDto inDto)
     {
         return await filesControllerHelperInternal.CreateHtmlFileAsync(await globalFolderHelper.FolderCommonAsync, inDto.Title, inDto.Content, !inDto.CreateNewIfExist);
@@ -532,7 +532,7 @@ public class FilesControllerCommon(
     /// <returns type="ASC.Files.Core.ApiModels.ResponseDto.FileDto, ASC.Files.Core">New file information</returns>
     /// <path>api/2.0/files/@my/html</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("@my/html")]
+    [HttpPost("@my/html", Name = "createHtmlFileInMy")]
     public async Task<FileDto<int>> CreateHtmlFileInMyAsync(CreateTextOrHtmlFileRequestDto inDto)
     {
         return await filesControllerHelperInternal.CreateHtmlFileAsync(await globalFolderHelper.FolderMyAsync, inDto.Title, inDto.Content, !inDto.CreateNewIfExist);
@@ -548,7 +548,7 @@ public class FilesControllerCommon(
     /// <path>api/2.0/files/@common/text</path>
     /// <httpMethod>POST</httpMethod>
     /// <visible>false</visible>
-    [HttpPost("@common/text")]
+    [HttpPost("@common/text", Name = "createTextFileInCommon")]
     public async Task<FileDto<int>> CreateTextFileInCommonAsync(CreateTextOrHtmlFileRequestDto inDto)
     {
         return await filesControllerHelperInternal.CreateTextFileAsync(await globalFolderHelper.FolderCommonAsync, inDto.Title, inDto.Content, !inDto.CreateNewIfExist);
@@ -563,7 +563,7 @@ public class FilesControllerCommon(
     /// <returns type="ASC.Files.Core.ApiModels.ResponseDto.FileDto, ASC.Files.Core">New file information</returns>
     /// <path>api/2.0/files/@my/text</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("@my/text")]
+    [HttpPost("@my/text", Name = "createTextFileInMy")]
     public async Task<FileDto<int>> CreateTextFileInMyAsync(CreateTextOrHtmlFileRequestDto inDto)
     {
         return await filesControllerHelperInternal.CreateTextFileAsync(await globalFolderHelper.FolderMyAsync, inDto.Title, inDto.Content, !inDto.CreateNewIfExist);
@@ -580,7 +580,7 @@ public class FilesControllerCommon(
     /// <httpMethod>POST</httpMethod>
     /// <collection>list</collection>
     [AllowAnonymous]
-    [HttpPost("thumbnails")]
+    [HttpPost("thumbnails", Name = "createThumbnails")]
     public async Task<IEnumerable<JsonElement>> CreateThumbnailsAsync(BaseBatchRequestDto inDto)
     {
         return await fileStorageService.CreateThumbnailsAsync(inDto.FileIds.ToList());

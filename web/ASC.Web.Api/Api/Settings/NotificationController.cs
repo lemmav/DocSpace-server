@@ -46,7 +46,7 @@ public class NotificationController(
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.NotificationSettingsDto, ASC.Web.Api">Notification settings</returns>
     /// <path>api/2.0/settings/notification/{type}</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("{type}")]
+    [HttpGet("{type}", Name = "getNotificationSettings")]
     public async Task<NotificationSettingsDto> GetSettingsAsync(NotificationType type)
     {
         var isEnabled = await notificationControllerHelper.GetNotificationStatusAsync(type);
@@ -63,7 +63,7 @@ public class NotificationController(
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.NotificationSettingsDto, ASC.Web.Api">Notification settings</returns>
     /// <path>api/2.0/settings/notification</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("")]
+    [HttpPost("", Name = "setNotificationSettings")]
     public async Task<NotificationSettingsDto> SetSettingsAsync(NotificationSettingsRequestsDto inDto)
     {
         await notificationControllerHelper.SetNotificationStatusAsync(inDto.Type, inDto.IsEnabled);
@@ -79,7 +79,7 @@ public class NotificationController(
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.RoomsNotificayionSettingsDto, ASC.Web.Api">Room notification settings</returns>
     /// <path>api/2.0/settings/notification/rooms</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("rooms")]
+    [HttpGet("rooms", Name = "getRoomsNotificationSettings")]
     public async Task<RoomsNotificayionSettingsDto> GetRoomsNotificationSettings()
     {
         var  settings = await roomsNotificationSettingsHelper.GetSettingsForCurrentUserAsync();
@@ -95,7 +95,7 @@ public class NotificationController(
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.RoomsNotificayionSettingsDto, ASC.Web.Api">Room notification settings</returns>
     /// <path>api/2.0/settings/notification/rooms</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("rooms")]
+    [HttpPost("rooms", Name = "setRoomsNotificationStatus")]
     public async Task<RoomsNotificayionSettingsDto> SetRoomsNotificationStatus(RoomsNotificationsSettingsRequestDto inDto)
     {
         var settings = await roomsNotificationSettingsHelper.SetForCurrentUserAsync(inDto.RoomsId, inDto.Mute);

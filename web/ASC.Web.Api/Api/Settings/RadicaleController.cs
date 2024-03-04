@@ -53,7 +53,7 @@ public class RadicaleController(RadicaleClient radicaleClient,
     /// <path>api/2.0/settings/carddavurl</path>
     /// <httpMethod>GET</httpMethod>
     /// <visible>false</visible>
-    [HttpGet("carddavurl")]
+    [HttpGet("carddavurl", Name = "getCardDavUrl")]
     public async Task<DavResponse> GetCardDavUrl()
     {
 
@@ -125,7 +125,7 @@ public class RadicaleController(RadicaleClient radicaleClient,
     /// <path>api/2.0/settings/deletebook</path>
     /// <httpMethod>DELETE</httpMethod>
     /// <visible>false</visible>
-    [HttpDelete("deletebook")]
+    [HttpDelete("deletebook", Name = "deleteCardDavAddressBook")]
     public async Task<DavResponse> DeleteCardDavAddressBook()
     {
         var currUser = await userManager.GetUsersAsync(authContext.CurrentAccount.ID);

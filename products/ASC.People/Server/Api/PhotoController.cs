@@ -56,7 +56,7 @@ public class PhotoController(UserManager userManager,
     /// <path>api/2.0/people/{userid}/photo/thumbnails</path>
     /// <httpMethod>POST</httpMethod>
     /// <returns type="ASC.People.ApiModels.ResponseDto.ThumbnailsDataDto, ASC.People">Thumbnail parameters</returns>
-    [HttpPost("{userid}/photo/thumbnails")]
+    [HttpPost("{userid}/photo/thumbnails", Name = "CreateMemberPhotoThumbnails")]
     public async Task<ThumbnailsDataDto> CreateMemberPhotoThumbnails(string userid, ThumbnailsRequestDto inDto)
     {
         var user = await GetUserInfoAsync(userid);
@@ -112,7 +112,7 @@ public class PhotoController(UserManager userManager,
     /// <returns type="ASC.People.ApiModels.ResponseDto.ThumbnailsDataDto, ASC.People">Thumbnail parameters: original photo, retina, maximum size photo, big, medium, small</returns>
     /// <path>api/2.0/people/{userid}/photo</path>
     /// <httpMethod>DELETE</httpMethod>
-    [HttpDelete("{userid}/photo")]
+    [HttpDelete("{userid}/photo", Name = "deleteMemberPhoto")]
     public async Task<ThumbnailsDataDto> DeleteMemberPhotoAsync(string userid)
     {
         var user = await GetUserInfoAsync(userid);
@@ -148,7 +148,7 @@ public class PhotoController(UserManager userManager,
     /// <returns type="ASC.People.ApiModels.ResponseDto.ThumbnailsDataDto, ASC.People">Thumbnail parameters: original photo, retina, maximum size photo, big, medium, small</returns>
     /// <path>api/2.0/people/{userid}/photo</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("{userid}/photo")]
+    [HttpGet("{userid}/photo", Name = "getMemberPhoto")]
     public async Task<ThumbnailsDataDto> GetMemberPhoto(string userid)
     {
         var user = await GetUserInfoAsync(userid);
@@ -173,7 +173,7 @@ public class PhotoController(UserManager userManager,
     /// <returns type="ASC.People.ApiModels.ResponseDto.ThumbnailsDataDto, ASC.People">Updated thumbnail parameters: original photo, retina, maximum size photo, big, medium, small</returns>
     /// <path>api/2.0/people/{userid}/photo</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("{userid}/photo")]
+    [HttpPut("{userid}/photo", Name = "updateMemberPhoto")]
     public async Task<ThumbnailsDataDto> UpdateMemberPhoto(string userid, UpdateMemberRequestDto inDto)
     {
         var user = await GetUserInfoAsync(userid);
@@ -212,7 +212,7 @@ public class PhotoController(UserManager userManager,
     /// <path>api/2.0/people/{userid}/photo</path>
     /// <httpMethod>POST</httpMethod>
     /// <returns type="ASC.People.ApiModels.ResponseDto.FileUploadResultDto, ASC.People">Result of file uploading</returns>
-    [HttpPost("{userid}/photo")]
+    [HttpPost("{userid}/photo", Name = "uploadMemberPhoto")]
     public async Task<FileUploadResultDto> UploadMemberPhoto(string userid, IFormCollection formCollection)
     {
         var result = new FileUploadResultDto();

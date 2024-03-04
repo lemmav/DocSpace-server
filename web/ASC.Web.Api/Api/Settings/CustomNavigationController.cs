@@ -46,7 +46,7 @@ public class CustomNavigationController(MessageService messageService,
     /// <path>api/2.0/settings/customnavigation/getall</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("getall")]
+    [HttpGet("getall", Name = "getCustomNavigationItems")]
     public async Task<List<CustomNavigationItem>> GetCustomNavigationItemsAsync()
     {
         return (await settingsManager.LoadAsync<CustomNavigationSettings>()).Items;
@@ -60,7 +60,7 @@ public class CustomNavigationController(MessageService messageService,
     /// <returns type="ASC.Web.Studio.Core.CustomNavigationItem, ASC.Web.Core">Custom navigation item</returns>
     /// <path>api/2.0/settings/customnavigation/getsample</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("getsample")]
+    [HttpGet("getsample", Name = "getCustomNavigationItemSample")]
     public CustomNavigationItem GetCustomNavigationItemSample()
     {
         return CustomNavigationItem.GetSample();
@@ -75,7 +75,7 @@ public class CustomNavigationController(MessageService messageService,
     /// <returns type="ASC.Web.Studio.Core.CustomNavigationItem, ASC.Web.Core">Custom navigation item</returns>
     /// <path>api/2.0/settings/customnavigation/get/{id}</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("get/{id:guid}")]
+    [HttpGet("get/{id:guid}", Name = "getCustomNavigationItem")]
     public async Task<CustomNavigationItem> GetCustomNavigationItemAsync(Guid id)
     {
         return (await settingsManager.LoadAsync<CustomNavigationSettings>()).Items.Find(item => item.Id == id);
@@ -90,7 +90,7 @@ public class CustomNavigationController(MessageService messageService,
     /// <returns type="ASC.Web.Studio.Core.CustomNavigationItem, ASC.Web.Core">Custom navigation item</returns>
     /// <path>api/2.0/settings/customnavigation/create</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("create")]
+    [HttpPost("create", Name = "createCustomNavigationItem")]
     public async Task<CustomNavigationItem> CreateCustomNavigationItem(CustomNavigationItem inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -152,7 +152,7 @@ public class CustomNavigationController(MessageService messageService,
     /// <path>api/2.0/settings/customnavigation/delete/{id}</path>
     /// <httpMethod>DELETE</httpMethod>
     /// <returns></returns>
-    [HttpDelete("delete/{id:guid}")]
+    [HttpDelete("delete/{id:guid}", Name = "deleteCustomNavigationItem")]
     public async Task DeleteCustomNavigationItem(Guid id)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);

@@ -58,7 +58,7 @@ public class FeedController(FeedReadedDataProvider feedReadDataProvider,
     /// <path>api/2.0/feed/read</path>
     /// <httpMethod>PUT</httpMethod>
     /// <returns></returns>
-    [HttpPut("read")]
+    [HttpPut("read", Name = "read")]
     public async Task Read()
     {
         await feedReadDataProvider.SetTimeReadedAsync();
@@ -82,7 +82,7 @@ public class FeedController(FeedReadedDataProvider feedReadDataProvider,
     /// <returns type="System.Object, System">List of filtered feeds with the dates when they were read</returns>
     /// <path>api/2.0/feed/filter</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("filter")]
+    [HttpGet("filter", Name = "getFeed")]
     public async Task<object> GetFeedAsync(
         string id,
         string product,
@@ -208,7 +208,7 @@ public class FeedController(FeedReadedDataProvider feedReadDataProvider,
     /// <returns type="System.Object, System">Number of fresh feeds</returns>
     /// <path>api/2.0/feed/newfeedscount</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("newfeedscount")]
+    [HttpGet("newfeedscount", Name = "getFreshNewsCount")]
     public async Task<object> GetFreshNewsCountAsync()
     {
         var cacheKey = Key;

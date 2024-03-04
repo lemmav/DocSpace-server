@@ -80,7 +80,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <path>api/2.0/portal</path>
     /// <httpMethod>GET</httpMethod>
     [AllowNotPayment]
-    [HttpGet("")]
+    [HttpGet("", Name = "getTenant")]
     public async Task<TenantDto> Get()
     {
         var tenant = await tenantManager.GetCurrentTenantAsync();   
@@ -98,7 +98,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <returns type="ASC.Core.Users.UserInfo, ASC.Core.Common">User information</returns>
     /// <path>api/2.0/portal/users/{userID}</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("users/{userID:guid}")]
+    [HttpGet("users/{userID:guid}", Name = "getUser")]
     public async Task<UserInfo> GetUserAsync(Guid userID)
     {
         return await userManager.GetUsersAsync(userID);
@@ -115,7 +115,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <returns type="System.Object, System">Invitation link</returns>
     /// <path>api/2.0/portal/users/invite/{employeeType}</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("users/invite/{employeeType}")]
+    [HttpGet("users/invite/{employeeType}", Name = "geInviteLink")]
     public async Task<object> GeInviteLinkAsync(EmployeeType employeeType)
     {
         var currentUser = await userManager.GetUsersAsync(authContext.CurrentAccount.ID);
@@ -141,7 +141,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <returns type="System.Object, System">Shortened link</returns>
     /// <path>api/2.0/portal/getshortenlink</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("getshortenlink")]
+    [HttpPut("getshortenlink", Name = "getShortenLink")]
     public async Task<object> GetShortenLinkAsync(ShortenLinkRequestsDto inDto)
     {
         try
@@ -168,7 +168,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <httpMethod>GET</httpMethod>
     /// <visible>false</visible>
     [AllowNotPayment]
-    [HttpGet("tenantextra")]
+    [HttpGet("tenantextra", Name = "getTenantExtra")]
     public async Task<TenantExtraDto> GetTenantExtra(bool refresh)
     {
         //await _permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -206,7 +206,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <returns type="System.Double, System">Used portal space</returns>
     /// <path>api/2.0/portal/usedspace</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("usedspace")]
+    [HttpGet("usedspace", Name = "getUsedSpace")]
     public async Task<double> GetUsedSpaceAsync()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -228,7 +228,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <returns type="System.Int64, System">Number of portal users</returns>
     /// <path>api/2.0/portal/userscount</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("userscount")]
+    [HttpGet("userscount", Name = "getUsersCount")]
     public async Task<long> GetUsersCountAsync()
     {
         return (await userManager.GetUserNamesAsync(EmployeeStatus.Active)).Length;
@@ -246,7 +246,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <path>api/2.0/portal/tariff</path>
     /// <httpMethod>GET</httpMethod>
     [AllowNotPayment]
-    [HttpGet("tariff")]
+    [HttpGet("tariff", Name = "getTariff")]
     public async Task<Tariff> GetTariffAsync(bool refresh)
     {
         var tenant = await tenantManager.GetCurrentTenantAsync();
@@ -264,7 +264,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <path>api/2.0/portal/quota</path>
     /// <httpMethod>GET</httpMethod>
     [AllowNotPayment]
-    [HttpGet("quota")]
+    [HttpGet("quota", Name = "getQuota")]
     public async Task<TenantQuota> GetQuotaAsync()
     {
         var tenant = await tenantManager.GetCurrentTenantAsync();
@@ -281,7 +281,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <returns type="ASC.Core.Tenants.TenantQuota, ASC.Core.Common">Recommended portal quota</returns>
     /// <path>api/2.0/portal/quota/right</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("quota/right")]
+    [HttpGet("quota/right", Name = "getRightQuota")]
     public async Task<TenantQuota> GetRightQuotaAsync()
     {
         var usedSpace = await GetUsedSpaceAsync();
@@ -305,7 +305,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <returns type="System.Object, System">Portal path</returns>
     /// <path>api/2.0/portal/path</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("path")]
+    [HttpGet("path", Name = "getFullAbsolutePath")]
     public object GetFullAbsolutePath(string virtualPath)
     {
         return commonLinkUtility.GetFullAbsolutePath(virtualPath);
@@ -323,7 +323,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <path>api/2.0/portal/thumb</path>
     /// <httpMethod>GET</httpMethod>
     /// <visible>false</visible>
-    [HttpGet("thumb")]
+    [HttpGet("thumb", Name = "getThumb")]
     public FileResult GetThumb(string url)
     {
         if (!securityContext.IsAuthenticated || configuration["bookmarking:thumbnail-url"] == null)
@@ -359,8 +359,8 @@ public class PortalController(ILogger<PortalController> logger,
     /// <returns></returns>
     /// <path>api/2.0/portal/present/mark</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("present/mark")]
-    public async Task MarkPresentAsReadedAsync()
+    [HttpPost("present/mark", Name = "markPresentAsReadAsync")]
+    public async Task MarkPresentAsReadAsync()
     {
         try
         {
@@ -386,7 +386,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <path>api/2.0/portal/mobile/registration</path>
     /// <httpMethod>POST</httpMethod>
     /// <visible>false</visible>
-    [HttpPost("mobile/registration")]
+    [HttpPost("mobile/registration", Name = "registerMobileAppInstall")]
     public async Task RegisterMobileAppInstallAsync(MobileAppRequestsDto inDto)
     {
         var currentUser = await userManager.GetUsersAsync(securityContext.CurrentAccount.ID);
@@ -405,7 +405,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <path>api/2.0/portal/mobile/registration</path>
     /// <httpMethod>POST</httpMethod>
     /// <visible>false</visible>
-    [HttpPost("mobile/registration")]
+    [HttpPost("mobile/registration", Name = "registerMobileAppInstall")]
     public async Task RegisterMobileAppInstallAsync(MobileAppType type)
     {
         var currentUser = await userManager.GetUsersAsync(securityContext.CurrentAccount.ID);
@@ -422,7 +422,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <path>api/2.0/portal/portalrename</path>
     /// <httpMethod>PUT</httpMethod>
     /// <visible>false</visible>
-    [HttpPut("portalrename")]
+    [HttpPut("portalrename", Name = "updatePortalName")]
     public async Task<object> UpdatePortalName(PortalRenameRequestsDto inDto)
     {
         if (!SetupInfo.IsVisibleSettings(nameof(ManagementType.PortalSecurity)))
@@ -499,7 +499,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <returns></returns>
     /// <path>api/2.0/portal/deleteportalimmediately</path>
     /// <httpMethod>DELETE</httpMethod>
-    [HttpDelete("deleteportalimmediately")]
+    [HttpDelete("deleteportalimmediately", Name = "deletePortalImmediately")]
     public async Task DeletePortalImmediatelyAsync()
     {
         var tenant = await tenantManager.GetCurrentTenantAsync();
@@ -538,7 +538,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <path>api/2.0/portal/suspend</path>
     /// <httpMethod>POST</httpMethod>
     [AllowNotPayment]
-    [HttpPost("suspend")]
+    [HttpPost("suspend", Name = "sendSuspendInstructions")]
     public async Task SendSuspendInstructionsAsync()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -565,7 +565,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <path>api/2.0/portal/delete</path>
     /// <httpMethod>POST</httpMethod>
     [AllowNotPayment]
-    [HttpPost("delete")]
+    [HttpPost("delete", Name = "sendDeleteInstructions")]
     public async Task SendDeleteInstructionsAsync()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -592,7 +592,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <path>api/2.0/portal/continue</path>
     /// <httpMethod>PUT</httpMethod>
     [AllowSuspended]
-    [HttpPut("continue")]
+    [HttpPut("continue", Name = "continuePortal")]
     [Authorize(AuthenticationSchemes = "confirm", Roles = "PortalContinue")]
     public async Task ContinuePortalAsync()
     {
@@ -609,7 +609,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <returns></returns>
     /// <path>api/2.0/portal/suspend</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("suspend")]
+    [HttpPut("suspend", Name = "suspendPortal")]
     [Authorize(AuthenticationSchemes = "confirm", Roles = "PortalSuspend")]
     public async Task SuspendPortalAsync()
     {
@@ -631,7 +631,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <path>api/2.0/portal/delete</path>
     /// <httpMethod>DELETE</httpMethod>
     [AllowNotPayment]
-    [HttpDelete("delete")]
+    [HttpDelete("delete", Name = "deletePortal")]
     [Authorize(AuthenticationSchemes = "confirm", Roles = "PortalRemove")]
     public async Task<object> DeletePortalAsync()
     {
@@ -689,7 +689,7 @@ public class PortalController(ILogger<PortalController> logger,
     /// <path>api/2.0/portal/sendcongratulations</path>
     /// <httpMethod>POST</httpMethod>
     [AllowAnonymous]
-    [HttpPost("sendcongratulations")]
+    [HttpPost("sendcongratulations", Name = "sendCongratulations")]
     public async Task SendCongratulationsAsync([FromQuery] SendCongratulationsDto inDto)
     {
         var authInterval = TimeSpan.FromHours(1);

@@ -52,7 +52,7 @@ public class ThirdpartyController(
     /// <path>api/2.0/files/thirdparty/capabilities</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("thirdparty/capabilities")]
+    [HttpGet("thirdparty/capabilities", Name = "getThirdPartyCapabilities")]
     public async Task<List<List<string>>> CapabilitiesAsync()
     {
         var result = new List<List<string>>();
@@ -75,7 +75,7 @@ public class ThirdpartyController(
     /// <path>api/2.0/files/wordpress</path>
     /// <httpMethod>POST</httpMethod>
     /// <visible>false</visible>
-    [HttpPost("wordpress")]
+    [HttpPost("wordpress", Name = "createWordpressPost")]
     public async Task<bool> CreateWordpressPostAsync(CreateWordpressPostRequestDto inDto)
     {
         try
@@ -110,7 +110,7 @@ public class ThirdpartyController(
     /// <path>api/2.0/files/thirdparty/{providerId}</path>
     /// <httpMethod>DELETE</httpMethod>
     /// <exception cref="ArgumentException"></exception>
-    [HttpDelete("thirdparty/{providerId:int}")]
+    [HttpDelete("thirdparty/{providerId:int}", Name = "deleteThirdParty")]
     public async Task<object> DeleteThirdPartyAsync(int providerId)
     {
         return await fileStorageService.DeleteThirdPartyAsync(providerId.ToString(CultureInfo.InvariantCulture));
@@ -125,7 +125,7 @@ public class ThirdpartyController(
     /// <path>api/2.0/files/wordpress-delete</path>
     /// <httpMethod>GET</httpMethod>
     /// <visible>false</visible>
-    [HttpGet("wordpress-delete")]
+    [HttpGet("wordpress-delete", Name = "deleteWordpressInfo")]
     public async Task<object> DeleteWordpressInfoAsync()
     {
         var token = await wordpressToken.GetTokenAsync();
@@ -152,7 +152,7 @@ public class ThirdpartyController(
     /// <path>api/2.0/files/thirdparty/common</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("thirdparty/common")]
+    [HttpGet("thirdparty/common", Name = "getCommonThirdPartyFolders")]
     public async IAsyncEnumerable<FolderDto<string>> GetCommonThirdPartyFoldersAsync()
     {
         var parent = await fileStorageService.GetFolderAsync(await globalFolderHelper.FolderCommonAsync);
@@ -173,7 +173,7 @@ public class ThirdpartyController(
     /// <path>api/2.0/files/thirdparty</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("thirdparty")]
+    [HttpGet("thirdparty", Name = "getThirdPartyAccounts")]
     public IAsyncEnumerable<ThirdPartyParams> GetThirdPartyAccountsAsync()
     {
         return fileStorageService.GetThirdPartyAsync();
@@ -187,7 +187,7 @@ public class ThirdpartyController(
     /// <returns type="ASC.Files.Core.ApiModels.ResponseDto.FolderDto, ASC.Files.Core">Folder for the third-party account backup</returns>
     /// <path>api/2.0/files/thirdparty/backup</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("thirdparty/backup")]
+    [HttpGet("thirdparty/backup", Name = "getBackupThirdPartyAccount")]
     public async Task<FolderDto<string>> GetBackupThirdPartyAccountAsync()
     {
         var folder = await fileStorageService.GetBackupThirdPartyAsync();
@@ -209,7 +209,7 @@ public class ThirdpartyController(
     /// <path>api/2.0/files/wordpress-info</path>
     /// <httpMethod>GET</httpMethod>
     /// <visible>false</visible>
-    [HttpGet("wordpress-info")]
+    [HttpGet("wordpress-info", Name = "getWordpressInfo")]
     public async Task<object> GetWordpressInfoAsync()
     {
         var token = await wordpressToken.GetTokenAsync();
@@ -247,7 +247,7 @@ public class ThirdpartyController(
     /// <path>api/2.0/files/thirdparty</path>
     /// <httpMethod>POST</httpMethod>
     /// <exception cref="ArgumentException"></exception>
-    [HttpPost("thirdparty")]
+    [HttpPost("thirdparty", Name = "saveThirdParty")]
     public async Task<FolderDto<string>> SaveThirdPartyAsync(ThirdPartyRequestDto inDto)
     {
         var thirdPartyParams = new ThirdPartyParams
@@ -276,7 +276,7 @@ public class ThirdpartyController(
     /// <path>api/2.0/files/thirdparty/backup</path>
     /// <httpMethod>POST</httpMethod>
     /// <exception cref="ArgumentException"></exception>
-    [HttpPost("thirdparty/backup")]
+    [HttpPost("thirdparty/backup", Name = "saveThirdPartyBackup")]
     public async Task<FolderDto<string>> SaveThirdPartyBackupAsync(ThirdPartyBackupRequestDto inDto)
     {
         if (!await fileSecurityCommon.IsDocSpaceAdministratorAsync(securityContext.CurrentAccount.ID))
@@ -306,7 +306,7 @@ public class ThirdpartyController(
     /// <path>api/2.0/files/wordpress-save</path>
     /// <httpMethod>POST</httpMethod>
     /// <visible>false</visible>
-    [HttpPost("wordpress-save")]
+    [HttpPost("wordpress-save", Name = "wordpressSave")]
     public async Task<object> WordpressSaveAsync(WordpressSaveRequestDto inDto)
     {
         if (inDto.Code.Length == 0)

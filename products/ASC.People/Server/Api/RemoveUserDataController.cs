@@ -45,7 +45,7 @@ public class RemoveUserDataController(PermissionContext permissionContext,
     /// <returns type="ASC.People.ApiModels.ResponseDto.TaskProgressResponseDto, ASC.People">Deletion progress</returns>
     /// <path>api/2.0/people/remove/progress/{userid}</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("remove/progress/{userid:guid}")]
+    [HttpGet("remove/progress/{userid:guid}", Name = "getRemoveProgress")]
     public async Task<TaskProgressResponseDto> GetRemoveProgressAsync(Guid userId)
     {
         await permissionContext.DemandPermissionsAsync(Constants.Action_EditUser);
@@ -66,7 +66,7 @@ public class RemoveUserDataController(PermissionContext permissionContext,
     /// <returns type="System.Object, System">Information message</returns>
     /// <path>api/2.0/people/self/delete</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("self/delete")]
+    [HttpPut("self/delete", Name = "sendInstructionsToDelete")]
     public async Task<object> SendInstructionsToDeleteAsync()
     {
         var user = await userManager.GetUsersAsync(securityContext.CurrentAccount.ID);
@@ -92,7 +92,7 @@ public class RemoveUserDataController(PermissionContext permissionContext,
     /// <returns type="ASC.People.ApiModels.ResponseDto.TaskProgressResponseDto, ASC.People">Deletion progress</returns>
     /// <path>api/2.0/people/remove/start</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("remove/start")]
+    [HttpPost("remove/start", Name = "startRemove")]
     public async Task<TaskProgressResponseDto> StartRemoveAsync(TerminateRequestDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(Constants.Action_EditUser);
@@ -124,7 +124,7 @@ public class RemoveUserDataController(PermissionContext permissionContext,
     /// <path>api/2.0/people/remove/terminate</path>
     /// <httpMethod>PUT</httpMethod>
     /// <returns></returns>
-    [HttpPut("remove/terminate")]
+    [HttpPut("remove/terminate", Name = "terminateRemove")]
     public async Task TerminateRemoveAsync(TerminateRequestDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(Constants.Action_EditUser);

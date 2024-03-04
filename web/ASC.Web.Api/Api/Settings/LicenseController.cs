@@ -54,7 +54,7 @@ public class LicenseController(ILoggerProvider option,
     /// <returns type="System.Boolean, System">Boolean value: true if the operation is successful</returns>
     /// <path>api/2.0/settings/license/refresh</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("refresh")]
+    [HttpGet("refresh", Name = "refreshLicense")]
     [AllowNotPayment]
     public async Task<bool> RefreshLicenseAsync()
     {
@@ -78,7 +78,7 @@ public class LicenseController(ILoggerProvider option,
     /// <path>api/2.0/settings/license/accept</path>
     /// <httpMethod>POST</httpMethod>
     [AllowNotPayment]
-    [HttpPost("accept")]
+    [HttpPost("accept", Name = "acceptLicense")]
     public async Task<object> AcceptLicenseAsync()
     {
         if (!coreBaseSettings.Standalone)
@@ -124,7 +124,7 @@ public class LicenseController(ILoggerProvider option,
     /// <path>api/2.0/settings/license/trial</path>
     /// <httpMethod>POST</httpMethod>
     ///<visible>false</visible>
-    [HttpPost("trial")]
+    [HttpPost("trial", Name = "activateTrial")]
     public async Task<bool> ActivateTrialAsync()
     {
         if (!coreBaseSettings.Standalone)
@@ -194,7 +194,7 @@ public class LicenseController(ILoggerProvider option,
     /// <requiresAuthorization>false</requiresAuthorization>
     [AllowAnonymous]
     [AllowNotPayment]
-    [HttpGet("required")]
+    [HttpGet("required", Name = "requestLicense")]
     public async Task<bool> RequestLicense()
     {
         return await firstTimeTenantSettings.GetRequestLicense();
@@ -213,7 +213,7 @@ public class LicenseController(ILoggerProvider option,
     /// <path>api/2.0/settings/license</path>
     /// <httpMethod>POST</httpMethod>
     [AllowNotPayment]
-    [HttpPost("")]
+    [HttpPost("", Name = "uploadLicense")]
     [Authorize(AuthenticationSchemes = "confirm", Roles = "Wizard, Administrators")]
     public async Task<object> UploadLicenseAsync([FromForm] UploadLicenseRequestsDto inDto)
     {

@@ -45,7 +45,7 @@ public class NotificationController(UserManager userManager,
     /// <returns type="System.Object, System">Notification</returns>
     /// <path>api/2.0/people/phone</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("phone")]
+    [HttpPost("phone", Name = "sendNotificationToChange")]
     public async Task<object> SendNotificationToChangeAsync(UpdateMemberRequestDto inDto)
     {
         var user = await userManager.GetUsersAsync(string.IsNullOrEmpty(inDto.UserId)

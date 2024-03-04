@@ -53,7 +53,7 @@ public class LdapController(ApiContext apiContext,
     /// <path>api/2.0/settings/ldap</path>
     /// <httpMethod>GET</httpMethod>
 /// <visible>false</visible>
-    [HttpGet("")]
+    [HttpGet("", Name = "getLdapSettings")]
     public async Task<LdapSettingsDto> GetLdapSettingsAsync()
     {
         await CheckLdapPermissionsAsync();
@@ -97,7 +97,7 @@ public class LdapController(ApiContext apiContext,
     /// <path>api/2.0/settings/ldap/cron</path>
     /// <httpMethod>GET</httpMethod>
 /// <visible>false</visible>
-    [HttpGet("cron")]
+    [HttpGet("cron", Name = "getLdapCronSettings")]
     public async Task<LdapCronSettingsDto> GetLdapCronSettingsAsync()
     {
         await CheckLdapPermissionsAsync();
@@ -124,7 +124,7 @@ public class LdapController(ApiContext apiContext,
     /// <httpMethod>POST</httpMethod>
     /// <returns></returns>
 /// <visible>false</visible>
-    [HttpPost("cron")]
+    [HttpPost("cron", Name = "setLdapCronSettings")]
     public async Task SetLdapCronSettingsAsync(LdapCronRequestDto inDto)
     {
         await CheckLdapPermissionsAsync();
@@ -174,7 +174,7 @@ public class LdapController(ApiContext apiContext,
     /// <httpMethod>GET</httpMethod>
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.LdapStatusDto, ASC.Web.Api">LDAP operation status</returns>
 /// <visible>false</visible>
-    [HttpGet("sync")]
+    [HttpGet("sync", Name = "syncLdap")]
     public async Task<LdapStatusDto> SyncLdapAsync()
     {
         await CheckLdapPermissionsAsync();
@@ -201,7 +201,7 @@ public class LdapController(ApiContext apiContext,
     /// <httpMethod>GET</httpMethod>
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.LdapStatusDto, ASC.Web.Api">LDAP operation status</returns>
 /// <visible>false</visible>
-    [HttpGet("sync/test")]
+    [HttpGet("sync/test", Name = "testLdap")]
     public async Task<LdapStatusDto> TestLdapSync()
     {
         await CheckLdapPermissionsAsync();
@@ -227,7 +227,7 @@ public class LdapController(ApiContext apiContext,
     /// <path>api/2.0/settings/ldap</path>
     /// <httpMethod>POST</httpMethod>
 /// <visible>false</visible>
-    [HttpPost("")]
+    [HttpPost("", Name = "saveLdapSettings")]
     public async Task<LdapStatusDto> SaveLdapSettingsAsync(LdapRequestsDto inDto)
     {
         var ldapSettings = mapper.Map<LdapRequestsDto, LdapSettings>(inDto);
@@ -260,7 +260,7 @@ public class LdapController(ApiContext apiContext,
     /// <httpMethod>POST</httpMethod>
     /// <returns type="ASC.Web.Api.ApiModels.ResponseDto.LdapStatusDto, ASC.Web.Api">LDAP operation status</returns>
 /// <visible>false</visible>
-    [HttpPost("save/test")]
+    [HttpPost("save/test", Name = "testLdapSave")]
     public async Task<LdapStatusDto> TestLdapSaveAsync(LdapSettings inDto)
     {
         await CheckLdapPermissionsAsync();
@@ -285,7 +285,7 @@ public class LdapController(ApiContext apiContext,
     /// <path>api/2.0/settings/ldap/status</path>
     /// <httpMethod>GET</httpMethod>
 /// <visible>false</visible>
-    [HttpGet("status")]
+    [HttpGet("status", Name = "getLdapOperationStatus")]
     public async Task<LdapStatusDto> GetLdapOperationStatusAsync()
     {
         await CheckLdapPermissionsAsync();
@@ -308,7 +308,7 @@ public class LdapController(ApiContext apiContext,
     /// <path>api/2.0/settings/ldap/default</path>
     /// <httpMethod>GET</httpMethod>
 /// <visible>false</visible>
-    [HttpGet("default")]
+    [HttpGet("default", Name = "getDefaultLdapSettings")]
     public async Task<LdapSettingsDto> GetDefaultLdapSettingsAsync()
     {
         await CheckLdapPermissionsAsync();

@@ -1,29 +1,3 @@
-// (c) Copyright Ascensio System SIA 2010-2023
-//
-// This program is a free software product.
-// You can redistribute it and/or modify it under the terms
-// of the GNU Affero General Public License (AGPL) version 3 as published by the Free Software
-// Foundation. In accordance with Section 7(a) of the GNU AGPL its Section 15 shall be amended
-// to the effect that Ascensio System SIA expressly excludes the warranty of non-infringement of
-// any third-party rights.
-//
-// This program is distributed WITHOUT ANY WARRANTY, without even the implied warranty
-// of MERCHANTABILITY or FITNESS FOR A PARTICULAR  PURPOSE. For details, see
-// the GNU AGPL at: http://www.gnu.org/licenses/agpl-3.0.html
-//
-// You can contact Ascensio System SIA at Lubanas st. 125a-25, Riga, Latvia, EU, LV-1021.
-//
-// The  interactive user interfaces in modified source and object code versions of the Program must
-// display Appropriate Legal Notices, as required under Section 5 of the GNU AGPL version 3.
-//
-// Pursuant to Section 7(b) of the License you must retain the original Product logo when
-// distributing the program. Pursuant to Section 7(e) we decline to grant you any rights under
-// trademark law for use of our trademarks.
-//
-// All the Product's GUI elements, including illustrations and icon sets, as well as technical writing
-// content are licensed under the terms of the Creative Commons Attribution-ShareAlike 4.0
-// International. See the License terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
-
 namespace ASC.Data.Backup.Controllers;
 
 /// <summary>
@@ -53,7 +27,7 @@ public class BackupController(
     /// <returns type="ASC.Data.Backup.BackupAjaxHandler.Schedule, ASC.Data.Backup">Backup schedule</returns>
     /// <httpMethod>GET</httpMethod>
     /// <path>api/2.0/backup/getbackupschedule</path>
-    [HttpGet("getbackupschedule")]
+    [HttpGet("getbackupschedule", Name = "getBackupSchedule")]
     public async Task<BackupAjaxHandler.Schedule> GetBackupSchedule()
     {
         if (coreBaseSettings.Standalone)
@@ -72,7 +46,7 @@ public class BackupController(
     /// <returns type="System.Boolean, System">Boolean value: true if the operation is successful</returns>
     /// <httpMethod>POST</httpMethod>
     /// <path>api/2.0/backup/createbackupschedule</path>
-    [HttpPost("createbackupschedule")]
+    [HttpPost("createbackupschedule", Name = "createBackupSchedule")]
     public async Task<bool> CreateBackupScheduleAsync(BackupScheduleDto inDto)
     {
         if (coreBaseSettings.Standalone)
@@ -113,7 +87,7 @@ public class BackupController(
     /// <returns type="System.Boolean, System">Boolean value: true if the operation is successful</returns>
     /// <httpMethod>DELETE</httpMethod>
     /// <path>api/2.0/backup/deletebackupschedule</path>
-    [HttpDelete("deletebackupschedule")]
+    [HttpDelete("deletebackupschedule", Name = "deleteBackupSchedule")]
     public async Task<bool> DeleteBackupSchedule()
     {
         if (coreBaseSettings.Standalone)
@@ -135,7 +109,7 @@ public class BackupController(
     /// <httpMethod>POST</httpMethod>
     /// <path>api/2.0/backup/startbackup</path>
     [AllowNotPayment]
-    [HttpPost("startbackup")]
+    [HttpPost("startbackup", Name = "startBackup")]
     public async Task<BackupProgress> StartBackupAsync(BackupDto inDto)
     {
         if (coreBaseSettings.Standalone)
@@ -193,7 +167,7 @@ public class BackupController(
     /// <httpMethod>GET</httpMethod>
     /// <path>api/2.0/backup/getbackupprogress</path>
     [AllowNotPayment]
-    [HttpGet("getbackupprogress")]
+    [HttpGet("getbackupprogress", Name = "getBackupProgress")]
     public async Task<BackupProgress> GetBackupProgressAsync()
     {
         if (coreBaseSettings.Standalone)
@@ -212,7 +186,7 @@ public class BackupController(
     /// <httpMethod>GET</httpMethod>
     /// <path>api/2.0/backup/getbackuphistory</path>
     /// <collection>list</collection>
-    [HttpGet("getbackuphistory")]
+    [HttpGet("getbackuphistory", Name = "getBackupHistory")]
     public async Task<List<BackupHistoryRecord>> GetBackupHistory()
     {
         if (coreBaseSettings.Standalone)
@@ -231,7 +205,7 @@ public class BackupController(
     /// <returns type="System.Boolean, System">Boolean value: true if the operation is successful</returns>
     /// <httpMethod>DELETE</httpMethod>
     /// <path>api/2.0/backup/deletebackup/{id}</path>
-    [HttpDelete("deletebackup/{id:guid}")]
+    [HttpDelete("deletebackup/{id:guid}", Name = "deleteBackup")]
     public async Task<bool> DeleteBackup(Guid id)
     {
         if (coreBaseSettings.Standalone)
@@ -250,7 +224,7 @@ public class BackupController(
     /// <returns type="System.Boolean, System">Boolean value: true if the operation is successful</returns>
     /// <httpMethod>DELETE</httpMethod>
     /// <path>api/2.0/backup/deletebackuphistory</path>
-    [HttpDelete("deletebackuphistory")]
+    [HttpDelete("deletebackuphistory", Name = "deleteBackupHistory")]
     public async Task<bool> DeleteBackupHistory()
     {
         if (coreBaseSettings.Standalone)
@@ -269,7 +243,7 @@ public class BackupController(
     /// <returns type="System.Object, System">Backup progress: completed or not, progress percentage, error, tenant ID, backup progress item (Backup, Restore, Transfer), link</returns>
     /// <httpMethod>POST</httpMethod>
     /// <path>api/2.0/backup/startrestore</path>
-    [HttpPost("startrestore")]
+    [HttpPost("startrestore", Name = "startBackupRestore")]
     public async Task<BackupProgress> StartBackupRestoreAsync(BackupRestoreDto inDto)
     {
         if (coreBaseSettings.Standalone)
@@ -309,7 +283,7 @@ public class BackupController(
     /// <httpMethod>GET</httpMethod>
     /// <path>api/2.0/backup/getrestoreprogress</path>
     /// <requiresAuthorization>false</requiresAuthorization>
-    [HttpGet("getrestoreprogress")]  //NOTE: this method doesn't check payment!!!
+    [HttpGet("getrestoreprogress", Name = "getRestoreProgress")]  //NOTE: this method doesn't check payment!!!
     [AllowAnonymous]
     [AllowNotPayment]
     public async Task<BackupProgress> GetRestoreProgressAsync()
@@ -330,7 +304,7 @@ public class BackupController(
     /// <httpMethod>GET</httpMethod>
     /// <path>api/2.0/backup/backuptmp</path>
     ///<visible>false</visible>
-    [HttpGet("backuptmp")]
+    [HttpGet("backuptmp", Name = "getTempPath")]
     public async Task<object> GetTempPath()
     {
         if (coreBaseSettings.Standalone)

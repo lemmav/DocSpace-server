@@ -67,7 +67,7 @@ public class StorageController(ILoggerProvider option,
     /// <path>api/2.0/settings/storage</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("storage")]
+    [HttpGet("storage", Name = "getAllStorages")]
     public async Task<List<StorageDto>> GetAllStoragesAsync()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -88,7 +88,7 @@ public class StorageController(ILoggerProvider option,
     /// <path>api/2.0/settings/storage/progress</path>
     /// <httpMethod>GET</httpMethod>
     [AllowNotPayment]
-    [HttpGet("storage/progress")]
+    [HttpGet("storage/progress", Name = "getStorageProgress")]
     public async Task<double> GetStorageProgressAsync()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -111,7 +111,7 @@ public class StorageController(ILoggerProvider option,
     /// <returns type="System.Boolean, System">Boolean value: true if the operation is successful</returns>
     /// <path>api/2.0/settings/encryption/start</path>
     /// <httpMethod>POST</httpMethod>
-    [HttpPost("encryption/start")]
+    [HttpPost("encryption/start", Name = "startStorageEncryption")]
     public async Task<bool> StartStorageEncryptionAsync(StorageEncryptionRequestsDto inDto)
     {
         if (coreBaseSettings.CustomMode)
@@ -242,7 +242,7 @@ public class StorageController(ILoggerProvider option,
     /// <path>api/2.0/settings/encryption/settings</path>
     /// <httpMethod>GET</httpMethod>
     /// <visible>false</visible>
-    [HttpGet("encryption/settings")]
+    [HttpGet("encryption/settings", Name = "getStorageEncryptionSettings")]
     public async Task<EncryptionSettings> GetStorageEncryptionSettingsAsync()
     {
         try
@@ -282,7 +282,7 @@ public class StorageController(ILoggerProvider option,
     /// <returns type="System.Nullable{System.Double}, System">Storage encryption progress</returns>
     /// <path>api/2.0/settings/encryption/progress</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("encryption/progress")]
+    [HttpGet("encryption/progress", Name = "getStorageEncryptionProgress")]
     public double? GetStorageEncryptionProgress()
     {
         if (coreBaseSettings.CustomMode)
@@ -312,7 +312,7 @@ public class StorageController(ILoggerProvider option,
     /// <returns type="ASC.Data.Storage.Configuration.StorageSettings, ASC.Data.Storage">Updated storage settings</returns>
     /// <path>api/2.0/settings/storage</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("storage")]
+    [HttpPut("storage", Name = "updateStorage")]
     public async Task<StorageSettings> UpdateStorageAsync(StorageRequestsDto inDto)
     {
         try
@@ -354,7 +354,7 @@ public class StorageController(ILoggerProvider option,
     /// <path>api/2.0/settings/storage</path>
     /// <httpMethod>DELETE</httpMethod>
     /// <returns></returns>
-    [HttpDelete("storage")]
+    [HttpDelete("storage", Name = "resetStorageToDefault")]
     public async Task ResetStorageToDefaultAsync()
     {
         try
@@ -387,7 +387,7 @@ public class StorageController(ILoggerProvider option,
     /// <path>api/2.0/settings/storage/cdn</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("storage/cdn")]
+    [HttpGet("storage/cdn", Name = "getAllCdnStorages")]
     public async Task<List<StorageDto>> GetAllCdnStoragesAsync()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -408,7 +408,7 @@ public class StorageController(ILoggerProvider option,
     /// <param type="ASC.Web.Api.ApiModel.RequestsDto.StorageRequestsDto, ASC.Web.Api" name="inDto">CDN storage settings request parameters</param>
     /// <path>api/2.0/settings/storage/cdn</path>
     /// <httpMethod>PUT</httpMethod>
-    [HttpPut("storage/cdn")]
+    [HttpPut("storage/cdn", Name = "updateCdn")]
     public async Task<CdnStorageSettings> UpdateCdnAsync(StorageRequestsDto inDto)
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -452,7 +452,7 @@ public class StorageController(ILoggerProvider option,
     /// <path>api/2.0/settings/storage/cdn</path>
     /// <httpMethod>DELETE</httpMethod>
     /// <returns></returns>
-    [HttpDelete("storage/cdn")]
+    [HttpDelete("storage/cdn", Name = "resetCdnToDefault")]
     public async Task ResetCdnToDefaultAsync()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -471,7 +471,7 @@ public class StorageController(ILoggerProvider option,
     /// <path>api/2.0/settings/storage/backup</path>
     /// <httpMethod>GET</httpMethod>
     /// <collection>list</collection>
-    [HttpGet("storage/backup")]
+    [HttpGet("storage/backup", Name = "getAllBackupStorages")]
     public async Task<List<StorageDto>> GetAllBackupStorages()
     {
         await permissionContext.DemandPermissionsAsync(SecurityConstants.EditPortalSettings);
@@ -509,7 +509,7 @@ public class StorageController(ILoggerProvider option,
     /// <returns type="System.Object, System">List of the Amazon regions</returns>
     /// <path>api/2.0/settings/storage/s3/regions</path>
     /// <httpMethod>GET</httpMethod>
-    [HttpGet("storage/s3/regions")]
+    [HttpGet("storage/s3/regions", Name = "getAmazonS3Regions")]
     public object GetAmazonS3Regions()
     {
         return RegionEndpoint.EnumerableAllRegions;
