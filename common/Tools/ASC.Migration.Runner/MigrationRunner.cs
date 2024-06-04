@@ -24,6 +24,13 @@
 // content are licensed under the terms of the Creative Commons Attribution-ShareAlike 4.0
 // International. See the License terms at http://creativecommons.org/licenses/by-sa/4.0/legalcode
 
+using ASC.Core.Common.EF.Context;
+using ASC.Core.Common.EF.Model;
+using ASC.Core.Common.EF;
+using ASC.Core.Tenants;
+
+using Microsoft.EntityFrameworkCore.Internal;
+
 namespace Migration.Runner;
 
 public class MigrationRunner
@@ -37,8 +44,31 @@ public class MigrationRunner
 
     public void RunApplyMigrations(string path, ProviderInfo dbProvider, ProviderInfo teamlabsiteProvider, ConfigurationInfo configurationInfo, string targetMigration)
     {
+        var migrationContext = _dbContextActivator.CreateInstance(typeof(MigrationContext), dbProvider) as MigrationContext;
+        var query = from u in migrationContext.Users
+                join t in migrationContext.Tenants on u.TenantId equals t.Id into t
+                from mapping in t.DefaultIfEmpty()
+                select new
+                {
+                    u = u,
+                    t = mapping
+                };
+        var tenants = query.Where(q=> q.t == null).Select(q=> q.u.TenantId).Distinct().ToList();
 
-        var migrationContext = _dbContextActivator.CreateInstance(typeof(MigrationContext), dbProvider);
+        foreach (var tenant in tenants)
+        {
+            var dbTenant = new DbTenant();
+            dbTenant.Id = tenant;
+            dbTenant.Alias = $"temp-{tenant}";
+            dbTenant.Version = 2;
+            dbTenant.Name = "";
+            dbTenant.Status = TenantStatus.Suspended;
+            dbTenant.LastModified = DateTime.Now;
+            migrationContext.Tenants.Add(dbTenant);
+        }
+
+        migrationContext.SaveChanges();
+
         Migrate(migrationContext, targetMigration);
 
         var teamlabContext = _dbContextActivator.CreateInstance(typeof(TeamlabSiteContext), teamlabsiteProvider);
@@ -46,9 +76,11 @@ public class MigrationRunner
 
         if (configurationInfo == ConfigurationInfo.Standalone)
         {
-            migrationContext = _dbContextActivator.CreateInstance(typeof(MigrationContext), dbProvider, ConfigurationInfo.Standalone);
+            migrationContext = _dbContextActivator.CreateInstance(typeof(MigrationContext), dbProvider, ConfigurationInfo.Standalone) as MigrationContext;
             Migrate(migrationContext, targetMigration);
         }
+
+        migrationContext.Tenants.Where(t=> tenants.Contains(t.Id)).ExecuteDelete();
         Console.WriteLine("Migrations applied");
     }
 
