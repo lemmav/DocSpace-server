@@ -283,15 +283,6 @@ namespace ASC.Migrations.MySql.SaaS.Migrations
                 principalTable: "tenants_tenants",
                 principalColumn: "id",
                 onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_tenants_partners_tenants_tenants_tenant_id",
-                table: "tenants_partners",
-                column: "tenant_id",
-                principalTable: "tenants_tenants",
-                principalColumn: "id",
-                onDelete: ReferentialAction.Cascade);
-
             migrationBuilder.AddForeignKey(
                 name: "FK_tenants_quotarow_tenants_tenants_tenant",
                 table: "tenants_quotarow",
