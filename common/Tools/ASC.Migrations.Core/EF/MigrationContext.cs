@@ -28,6 +28,10 @@ namespace ASC.Migrations.Core;
 
 public class MigrationContext : DbContext
 {
+    public MigrationContext()
+    {
+        Database.SetCommandTimeout(60 * 60);
+    }
     public DbSet<AccountLinks> AccountLinks { get; set; }
 
     public DbSet<DbTariff> Tariffs { get; set; }
