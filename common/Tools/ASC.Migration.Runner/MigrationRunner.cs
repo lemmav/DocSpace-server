@@ -78,7 +78,18 @@ public class MigrationRunner
                         fa = mapping
                     };
 
-        var feeds = queryFeed.Where(q => q.fa == null).Select(q=> q.f).ExecuteDelete();
+       queryFeed.Where(q => q.fa == null).Select(q=> q.f).ExecuteDelete();
+
+        var queryTree = from t in migrationContext.Tree
+                        join f in migrationContext.Folders on t.FolderId equals f.Id into f
+                        from mapping in f.DefaultIfEmpty()
+                        select new
+                        {
+                            t = t,
+                            f = mapping
+                        };
+
+        queryTree.Where(q => q.t == null).Select(q => q.t).ExecuteDelete();
 
         Migrate(migrationContext, targetMigration);
 
