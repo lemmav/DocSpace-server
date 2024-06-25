@@ -69,6 +69,17 @@ public class MigrationRunner
 
         migrationContext.SaveChanges();
 
+        var queryFeed = from f in migrationContext.FeedUsers
+                    join fa in migrationContext.FeedAggregates on f.FeedId equals fa.Id into fa
+                    from mapping in fa.DefaultIfEmpty()
+                    select new
+                    {
+                        f = f,
+                        fa = mapping
+                    };
+
+        var feeds = queryFeed.Where(q => q.fa == null).Select(q=> q.f).ExecuteDelete();
+
         Migrate(migrationContext, targetMigration);
 
         var teamlabContext = _dbContextActivator.CreateInstance(typeof(TeamlabSiteContext), teamlabsiteProvider);
