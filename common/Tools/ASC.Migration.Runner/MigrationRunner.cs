@@ -89,7 +89,7 @@ public class MigrationRunner
                             f = mapping
                         };
 
-        queryTree.Where(q => q.t == null).Select(q => q.t).ExecuteDelete();
+        queryTree.Where(q => q.f == null).Select(q => q.t).ExecuteDelete();
 
         Migrate(migrationContext, targetMigration);
 
