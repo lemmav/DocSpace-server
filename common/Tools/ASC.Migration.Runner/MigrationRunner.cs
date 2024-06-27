@@ -78,7 +78,7 @@ public class MigrationRunner
                         fa = mapping
                     };
 
-       queryFeed.Where(q => q.fa == null).Select(q=> q.f).ExecuteDelete();
+        queryFeed.Where(q => q.fa == null).Select(q=> q.f).ExecuteDelete();
 
         var queryTree = from t in migrationContext.Tree
                         join f in migrationContext.Folders on t.FolderId equals f.Id into f
@@ -89,6 +89,11 @@ public class MigrationRunner
                             f = mapping
                         };
 
+        var ids = queryTree.Where(q => q.f == null).Select(q => q.t.FolderId).ToList();
+        foreach(var id in ids)
+        {
+            Console.WriteLine(id);
+        }
         queryTree.Where(q => q.f == null).Select(q => q.t).ExecuteDelete();
 
         Migrate(migrationContext, targetMigration);
