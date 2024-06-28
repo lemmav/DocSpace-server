@@ -69,6 +69,30 @@ public class MigrationRunner
 
         migrationContext.SaveChanges();
 
+        var queryRows = from q in migrationContext.QuotaRows
+                    join t in migrationContext.Tenants on q.TenantId equals t.Id into t
+                    from mapping in t.DefaultIfEmpty()
+                    select new
+                    {
+                        q = q,
+                        t = mapping
+                    };
+        tenants = queryRows.Where(q => q.t == null).Select(q => q.u.TenantId).Distinct().ToList();
+
+        foreach (var tenant in tenants)
+        {
+            var dbTenant = new DbTenant();
+            dbTenant.Id = tenant;
+            dbTenant.Alias = $"temp-{tenant}";
+            dbTenant.Version = 2;
+            dbTenant.Name = "";
+            dbTenant.Status = TenantStatus.Suspended;
+            dbTenant.LastModified = DateTime.Now;
+            migrationContext.Tenants.Add(dbTenant);
+        }
+
+        migrationContext.SaveChanges();
+
         var queryFeed = from f in migrationContext.FeedUsers
                     join fa in migrationContext.FeedAggregates on f.FeedId equals fa.Id into fa
                     from mapping in fa.DefaultIfEmpty()
@@ -89,14 +113,8 @@ public class MigrationRunner
                             f = mapping
                         };
 
-        var trees = queryTree.Where(q => q.f == null).Select(q => q.t);
-        foreach(var id in trees.Select(q=> q.FolderId))
-        {
-            Console.WriteLine(id);
-        }
-        migrationContext.RemoveRange(trees);
+        queryTree.Where(q => q.f == null).Select(q => q.t).ExecuteDelete();
 
-        migrationContext.SaveChanges();
         Migrate(migrationContext, targetMigration);
 
         var teamlabContext = _dbContextActivator.CreateInstance(typeof(TeamlabSiteContext), teamlabsiteProvider);
