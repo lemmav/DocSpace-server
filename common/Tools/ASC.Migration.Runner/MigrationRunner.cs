@@ -89,13 +89,14 @@ public class MigrationRunner
                             f = mapping
                         };
 
-        var ids = queryTree.Where(q => q.f == null).Select(q => q.t.FolderId).ToList();
-        foreach(var id in ids)
+        var trees = queryTree.Where(q => q.f == null).Select(q => q.t);
+        foreach(var id in trees.Select(q=> q.FolderId))
         {
             Console.WriteLine(id);
         }
-        queryTree.Where(q => q.f == null).Select(q => q.t).ExecuteDelete();
+        migrationContext.RemoveRange(trees);
 
+        migrationContext.SaveChanges();
         Migrate(migrationContext, targetMigration);
 
         var teamlabContext = _dbContextActivator.CreateInstance(typeof(TeamlabSiteContext), teamlabsiteProvider);
