@@ -77,7 +77,7 @@ public class MigrationRunner
                         q = q,
                         t = mapping
                     };
-        tenants = queryRows.Where(q => q.t == null).Select(q => q.u.TenantId).Distinct().ToList();
+        tenants = queryRows.Where(q => q.t == null).Select(q => q.q.TenantId).Distinct().ToList();
 
         foreach (var tenant in tenants)
         {
