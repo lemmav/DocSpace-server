@@ -46,7 +46,7 @@ public class ThirdpartyController(
     UserManager userManager,
     StudioNotifyService studioNotifyService,
     TenantManager tenantManager,
-    InvitationLinkService invitationLinkService,
+    InvitationService invitationService,
     FileSecurity fileSecurity,
     UsersInRoomChecker usersInRoomChecker, 
     IDistributedLockProvider distributedLockProvider,
@@ -187,7 +187,7 @@ public class ThirdpartyController(
             throw new Exception(Resource.ErrorNotCorrectEmail);
         }
 
-        var linkData = await invitationLinkService.GetProcessedLinkDataAsync(inDto.Key, inDto.Email, inDto.EmployeeType ?? EmployeeType.RoomAdmin);
+        var linkData = await invitationService.GetInvitationDataAsync(inDto.Key, inDto.Email, inDto.EmployeeType ?? EmployeeType.RoomAdmin);
 
         if (!linkData.IsCorrect)
         {
@@ -214,7 +214,7 @@ public class ThirdpartyController(
                 inDto.Culture);
             
             var messageAction = employeeType == EmployeeType.RoomAdmin ? MessageAction.UserCreatedViaInvite : MessageAction.GuestCreatedViaInvite;
-            await messageService.SendAsync(MessageInitiator.System, messageAction, MessageTarget.Create(newUser.Id), newUser.DisplayUserName(false, displayUserSettingsHelper));
+            await messageService.SendAsync(MessageInitiator.System, messageAction, MessageTarget.Create(newUser.Id), description: newUser.DisplayUserName(false, displayUserSettingsHelper));
             userId = newUser.Id;
             if (!string.IsNullOrEmpty(thirdPartyProfile.Avatar))
             {
@@ -241,7 +241,7 @@ public class ThirdpartyController(
 
         await userHelpTourHelper.SetIsNewUser(true);
 
-        if (linkData is { LinkType: InvitationLinkType.CommonWithRoom })
+        if (linkData is { LinkType: InvitationLinkType.CommonToRoom })
         {
             var success = int.TryParse(linkData.RoomId, out var id);
             var tenantId = await tenantManager.GetCurrentTenantIdAsync();

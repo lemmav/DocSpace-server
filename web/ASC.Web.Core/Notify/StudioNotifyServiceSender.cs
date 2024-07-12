@@ -95,6 +95,7 @@ public class StudioNotifyServiceSender(IServiceScopeFactory serviceProvider,
 
 [Scope]
 public class StudioNotifyWorker(TenantManager tenantManager,
+    SecurityContext securityContext,
     StudioNotifyHelper studioNotifyHelper,
     CommonLinkUtility baseCommonLinkUtility,
     WorkContext workContext,
@@ -104,6 +105,11 @@ public class StudioNotifyWorker(TenantManager tenantManager,
     {
         baseCommonLinkUtility.ServerUri = item.BaseUrl;
         await tenantManager.SetCurrentTenantAsync(item.TenantId);
+
+        if (item.CreateBy != Constants.Guest.ID)
+        {
+            await securityContext.AuthenticateMeWithoutCookieAsync(item.TenantId, item.CreateBy);
+        }
 
         var client = workContext.RegisterClient(serviceProvider, studioNotifyHelper.NotifySource);
 

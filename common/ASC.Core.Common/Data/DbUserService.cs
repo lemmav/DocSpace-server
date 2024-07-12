@@ -330,7 +330,8 @@ public class EFUserService(IDbContextFactory<UserDbContext> dbContextFactory,
                         u.Group.UserGroupId == Constants.GroupAdmin.ID ? 1 :
                         u.Group.UserGroupId == Constants.GroupCollaborator.ID ? 3 : 4;
 
-                    q = (sortOrderAsc ? q1.OrderBy(orderByUserType) : q1.OrderByDescending(orderByUserType)).Select(r => r.User);
+                    q = (sortOrderAsc ? q1.OrderBy(orderByUserType).ThenBy(x => x.User.FirstName) 
+                        : q1.OrderByDescending(orderByUserType)).ThenBy(x => x.User.FirstName).Select(r => r.User);
                     break;
                 }
             case UserSortType.UsedSpace:
@@ -380,8 +381,8 @@ public class EFUserService(IDbContextFactory<UserDbContext> dbContextFactory,
             case UserSortType.FirstName:
             default:
                 q = sortOrderAsc
-                    ? q.OrderBy(r => r.ActivationStatus).ThenBy(u => u.FirstName)
-                    : q.OrderBy(r => r.ActivationStatus).ThenByDescending(u => u.FirstName);
+                    ? q.OrderBy(r => r.Status ==  EmployeeStatus.Active ? 0 : r.Status == EmployeeStatus.Pending ? 1 : 2).ThenBy(u => u.Status ==  EmployeeStatus.Pending ? u.Email : u.FirstName)
+                    : q.OrderBy(r => r.Status ==  EmployeeStatus.Active ? 0 : r.Status == EmployeeStatus.Pending ? 1 : 2).ThenByDescending(u => u.Status ==  EmployeeStatus.Pending ? u.Email : u.FirstName);
                 break;
         }
 
@@ -396,13 +397,6 @@ public class EFUserService(IDbContextFactory<UserDbContext> dbContextFactory,
         {
             yield return mapper.Map<User, UserInfo>(user);
         }
-    }
-
-    public async Task<IEnumerable<int>> GetTenantsWithFeedsAsync(DateTime from)
-    {
-        await using var userDbContext = await dbContextFactory.CreateDbContextAsync();
-
-        return await userDbContext.TenantIdsAsync(from).ToListAsync();
     }
 
     public async Task RemoveGroupAsync(int tenant, Guid id)
@@ -771,7 +765,9 @@ public class EFUserService(IDbContextFactory<UserDbContext> dbContextFactory,
         {
             switch (employeeStatus)
             {
-                case EmployeeStatus.LeaveOfAbsence:
+                case EmployeeStatus.Pending:
+                    q = q.Where(u => u.Status == EmployeeStatus.Pending);
+                    break;
                 case EmployeeStatus.Terminated:
                     q = isDocSpaceAdmin ? q.Where(u => u.Status == EmployeeStatus.Terminated) : q.Where(u => false);
                     break;

@@ -26,8 +26,8 @@
 
 using ASC.Common.Mapping;
 using ASC.Core.Notify.Socket;
-using ASC.Data.Storage;
 using ASC.MessagingSystem;
+using ASC.MessagingSystem.Data;
 
 using Flurl.Util;
 
@@ -42,7 +42,6 @@ public abstract class BaseStartup
     private const string MultiAuthSchemes = "MultiAuthSchemes";
 
     protected readonly IConfiguration _configuration;
-    private readonly IHostEnvironment _hostEnvironment;
     private readonly string _corsOrigin;
     private static readonly JsonSerializerOptions _serializerOptions = new() { PropertyNameCaseInsensitive = true };
 
@@ -52,10 +51,9 @@ public abstract class BaseStartup
 
     protected bool OpenApiEnabled { get; init; }
 
-    protected BaseStartup(IConfiguration configuration, IHostEnvironment hostEnvironment)
+    protected BaseStartup(IConfiguration configuration)
     {
         _configuration = configuration;
-        _hostEnvironment = hostEnvironment;
 
         _corsOrigin = _configuration["core:cors"];
 
@@ -70,10 +68,7 @@ public abstract class BaseStartup
         services.AddMemoryCache();
 
         services.AddHttpClient();
-        services.AddHttpClient("customHttpClient", x => { }).ConfigurePrimaryHttpMessageHandler(() =>
-        {
-            return new HttpClientHandler { AllowAutoRedirect = false };
-        });
+        services.AddHttpClient("customHttpClient", _ => { }).ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { AllowAutoRedirect = false });
 
         services.AddExceptionHandler<CustomExceptionHandler>();
         services.AddProblemDetails();
@@ -172,7 +167,7 @@ public abstract class BaseStartup
                 }),
                 PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
                 {
-                    var userId = httpContext?.User?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value;
+                    var userId = httpContext?.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value;
                     string partitionKey;
                     int permitLimit;
 
@@ -200,7 +195,7 @@ public abstract class BaseStartup
                 }),
                 PartitionedRateLimiter.Create<HttpContext, string>(httpContext =>
                     {
-                        var userId = httpContext?.User?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value ??
+                        var userId = httpContext?.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value ??
                                      httpContext?.Connection.RemoteIpAddress.ToInvariantString();
 
                         var remoteIpAddress = httpContext?.Connection.RemoteIpAddress;
@@ -227,11 +222,11 @@ public abstract class BaseStartup
 
             options.AddPolicy(RateLimiterPolicy.SensitiveApi, httpContext =>
             {
-                var userId = httpContext?.User?.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value ??
+                var userId = httpContext?.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Sid)?.Value ??
                              httpContext?.Connection.RemoteIpAddress.ToInvariantString();
 
                 var permitLimit = 5;
-                var path = httpContext.Request.Path.ToString();
+                var path = httpContext?.Request.Path.ToString();
                 var partitionKey = $"{RateLimiterPolicy.SensitiveApi}_{userId}|{path}";
                 var remoteIpAddress = httpContext?.Connection.RemoteIpAddress;
 
@@ -315,7 +310,6 @@ public abstract class BaseStartup
             .AddBaseDbContextPool<WebstudioDbContext>()
             .AddBaseDbContextPool<InstanceRegistrationContext>()
             .AddBaseDbContextPool<IntegrationEventLogContext>()
-            .AddBaseDbContextPool<FeedDbContext>()
             .AddBaseDbContextPool<MessagesContext>()
             .AddBaseDbContextPool<WebhooksDbContext>();
 
@@ -478,6 +472,7 @@ public abstract class BaseStartup
         services.AddSingleton(svc => svc.GetRequiredService<Channel<SocketData>>().Reader);
         services.AddSingleton(svc => svc.GetRequiredService<Channel<SocketData>>().Writer);
         services.AddHostedService<SocketService>();
+        
         services.Configure<DistributedTaskQueueFactoryOptions>(UserPhotoManager.CUSTOM_DISTRIBUTED_TASK_QUEUE_NAME, options =>
         {
             options.MaxThreadsCount = 2;

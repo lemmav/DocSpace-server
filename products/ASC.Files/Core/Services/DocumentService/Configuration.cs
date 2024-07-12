@@ -146,7 +146,7 @@ public class DocumentConfig<T>(
 {
     private string _fileUri;
     private string _key = string.Empty;
-    private FileReferenceData<T> _referenceData;
+    private FileReferenceData _referenceData;
     public string GetFileType(File<T> file) => file.ConvertedExtension.Trim('.');
     public InfoConfig<T> Info { get; set; } = infoConfig;
     public bool IsLinkedForMe { get; set; }
@@ -160,11 +160,11 @@ public class DocumentConfig<T>(
     public PermissionsConfig Permissions { get; set; } = new();
     public string SharedLinkParam { get; set; }
     public string SharedLinkKey { get; set; }
-    public async Task<FileReferenceData<T>> GetReferenceData(File<T> file)
+    public async Task<FileReferenceData> GetReferenceData(File<T> file)
     {
-        return _referenceData ??= new FileReferenceData<T>
+        return _referenceData ??= new FileReferenceData
         {
-            FileKey = file.Id, 
+            FileKey = file.Id.ToString(), 
             InstanceId = (await tenantManager.GetCurrentTenantIdAsync()).ToString()
         };
     }
@@ -184,7 +184,7 @@ public class DocumentConfig<T>(
         }
 
         var last = Permissions.Edit || Permissions.Review || Permissions.Comment;
-        _fileUri = await documentServiceConnector.ReplaceCommunityAddressAsync(pathProvider.GetFileStreamUrl(file, last));
+        _fileUri = await documentServiceConnector.ReplaceCommunityAddressAsync(await pathProvider.GetFileStreamUrlAsync(file, last));
 
         return _fileUri;
     }
@@ -282,8 +282,6 @@ public class EditorConfiguration<T>(
         switch (fileType)
         {
             case FileType.Document:
-            case FileType.OForm:
-            case FileType.OFormTemplate:
                 title = FilesJSResource.TitleNewFileText;
                 break;
 
@@ -327,8 +325,7 @@ public class EditorConfiguration<T>(
         var filter = fileType switch
         {
             FileType.Document => FilterType.DocumentsOnly,
-            FileType.OForm => FilterType.OFormOnly,
-            FileType.OFormTemplate => FilterType.OFormTemplateOnly,
+            FileType.Pdf => FilterType.Pdf,
             FileType.Spreadsheet => FilterType.SpreadsheetsOnly,
             FileType.Presentation => FilterType.PresentationsOnly,
             _ => FilterType.FilesOnly
@@ -370,8 +367,7 @@ public class EditorConfiguration<T>(
             var filter = fileType switch
             {
                 FileType.Document => FilterType.DocumentsOnly,
-                FileType.OForm => FilterType.OFormOnly,
-                FileType.OFormTemplate => FilterType.OFormTemplateOnly,
+                FileType.Pdf => FilterType.Pdf,
                 FileType.Spreadsheet => FilterType.SpreadsheetsOnly,
                 FileType.Presentation => FilterType.PresentationsOnly,
                 _ => FilterType.FilesOnly
@@ -489,11 +485,11 @@ public class PermissionsConfig
 
 /// <summary>
 /// </summary>
-public class FileReference<T>
+public class FileReference
 {
     /// <summary>File reference data</summary>
     /// <type>ASC.Web.Files.Services.DocumentService.FileReferenceData, ASC.Files.Core</type>
-    public FileReferenceData<T> ReferenceData { get; set; }
+    public FileReferenceData ReferenceData { get; set; }
 
     /// <summary>Error</summary>
     /// <type>System.String, System</type>
@@ -526,11 +522,11 @@ public class FileReference<T>
 
 /// <summary>
 /// </summary>
-public class FileReferenceData<T>
+public class FileReferenceData
 {
     /// <summary>File key</summary>
-    /// <type>System.Int32, System</type>
-    public T FileKey { get; set; }
+    /// <type>System.String, System</type>
+    public string FileKey { get; set; }
 
     /// <summary>Instance ID</summary>
     /// <type>System.String, System</type>
@@ -680,22 +676,8 @@ public class CustomizationConfig<T>(
 
     public async Task<bool> GetSubmitForm(File<T> file, bool modeWrite)
     {
-        if (!modeWrite || FileUtility.GetFileTypeByFileName(file.Title) != FileType.Pdf)
-        {
-            return false;
-        }
 
-        var linkDao = daoFactory.GetLinkDao();
-        var sourceId = await linkDao.GetSourceAsync(file.Id.ToString());
-
-        if (sourceId == null)
-        {
-            return false;
-        }
-
-        var properties = int.TryParse(sourceId, out var sourceInt)
-            ? await daoFactory.GetFileDao<int>().GetProperties(sourceInt)
-            : await daoFactory.GetFileDao<string>().GetProperties(sourceId);
+        var properties = await daoFactory.GetFileDao<T>().GetProperties(file.Id);
 
         return properties is { FormFilling.CollectFillForm: true };
     }
@@ -764,10 +746,15 @@ public class LogoConfig(
     {
         get => commonLinkUtility.GetFullAbsolutePath(commonLinkUtility.GetDefault());
     }
+
+    public bool GetVisible(EditorType editorType)
+    {
+        return editorType != EditorType.Mobile;
+    }
 }
 
 [Transient]
-public class PluginsConfig()
+public class PluginsConfig
     // ConsumerFactory consumerFactory,
     // BaseCommonLinkUtility baseCommonLinkUtility,
     // CoreBaseSettings coreBaseSettings,

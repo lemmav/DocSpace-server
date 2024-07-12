@@ -473,7 +473,10 @@ public class UserPhotoManager(UserManager userManager,
         try
         {
             var storage = await GetDataStoreAsync();
-            await storage.DeleteFilesAsync("", idUser + "*.*", false);
+            if (await storage.IsDirectoryAsync(""))
+            {
+                await storage.DeleteFilesAsync("", idUser + "*.*", false);
+            }
         }
         catch (AggregateException e)
         {
@@ -740,13 +743,13 @@ public class UserPhotoManager(UserManager userManager,
 
         while (true)
         {
-            var count = await s.ReadAsync(buffer, 0, buffer.Length);
+            var count = await s.ReadAsync(buffer);
             if (count == 0)
             {
                 break;
             }
 
-            await data.WriteAsync(buffer, 0, count);
+            await data.WriteAsync(buffer.AsMemory(0, count));
         }
 
         return data.ToArray();
@@ -767,7 +770,6 @@ public class UserPhotoManager(UserManager userManager,
 
     public async Task<(Image, IImageFormat)> GetPhotoImageAsync(Guid userID)
     {
-        IImageFormat format;
         try
         {
             var data = await userManager.GetUserPhotoAsync(userID);
@@ -775,14 +777,13 @@ public class UserPhotoManager(UserManager userManager,
             {
                 var img = Image.Load(data);
 
-                format = img.Metadata.DecodedImageFormat;
+                var format = img.Metadata.DecodedImageFormat;
 
                 return (img, format);
             }
         }
         catch { }
-        format = null;
-        return (null, format);
+        return (null, null);
     }
 
     public async Task<string> SaveThumbnail(Guid userID, Image img, IImageFormat format)
@@ -822,14 +823,15 @@ public class UserPhotoManager(UserManager userManager,
             var buffer = new byte[1024 * 10];
             while (true)
             {
-                var count = await s.ReadAsync(buffer, 0, buffer.Length);
+                var count = await s.ReadAsync(buffer);
                 if (count == 0)
                 {
                     break;
                 }
 
-                data.Write(buffer, 0, count);
+                await data.WriteAsync(buffer.AsMemory(0, count));
             }
+            
             return data.ToArray();
         }
         catch (Exception err)

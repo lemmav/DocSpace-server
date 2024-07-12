@@ -56,7 +56,7 @@ public class Startup
         services.AddHttpContextAccessor();
         services.AddMemoryCache();
         services.AddHttpClient();
-        services.AddExceptionHandler<Classes.CustomExceptionHandler>();
+        services.AddExceptionHandler<CustomExceptionHandler>();
         services.AddProblemDetails();
 
         services.AddSingleton<EFLoggerFactory>();
@@ -71,7 +71,6 @@ public class Startup
         services.AddBaseDbContextPool<WebstudioDbContext>();
         services.AddBaseDbContextPool<InstanceRegistrationContext>();
         services.AddBaseDbContextPool<IntegrationEventLogContext>();
-        services.AddBaseDbContextPool<FeedDbContext>();
         services.AddBaseDbContextPool<MessagesContext>();
         services.AddBaseDbContextPool<WebhooksDbContext>();
         services.AddBaseDbContextPool<FilesDbContext>();
