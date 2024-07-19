@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ASC.Migrations.MySql.SaaS.Migrations
 {
     /// <inheritdoc />
-    public partial class MigrationContext_Upgrade222 : Migration
+    public partial class MigrationContext_Upgrade22 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -121,6 +121,30 @@ namespace ASC.Migrations.MySql.SaaS.Migrations
                 table: "event_bus_integration_event_log",
                 column: "tenant_id",
                 principalTable: "tenants_tenants",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_feed_aggregate_tenants_tenants_tenant",
+                table: "feed_aggregate",
+                column: "tenant",
+                principalTable: "tenants_tenants",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_feed_readed_tenants_tenants_tenant_id",
+                table: "feed_readed",
+                column: "tenant_id",
+                principalTable: "tenants_tenants",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_feed_users_feed_aggregate_feed_id",
+                table: "feed_users",
+                column: "feed_id",
+                principalTable: "feed_aggregate",
                 principalColumn: "id",
                 onDelete: ReferentialAction.Cascade);
 
@@ -264,6 +288,62 @@ namespace ASC.Migrations.MySql.SaaS.Migrations
                 name: "FK_tenants_partners_tenants_tenants_tenant_id",
                 table: "tenants_partners",
                 column: "tenant_id",
+                principalTable: "tenants_tenants",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_tenants_quotarow_tenants_tenants_tenant",
+                table: "tenants_quotarow",
+                column: "tenant",
+                principalTable: "tenants_tenants",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_tenants_tariff_tenants_tenants_tenant",
+                table: "tenants_tariff",
+                column: "tenant",
+                principalTable: "tenants_tenants",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_tenants_tariffrow_tenants_tenants_tenant",
+                table: "tenants_tariffrow",
+                column: "tenant",
+                principalTable: "tenants_tenants",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_webhooks_config_tenants_tenants_tenant_id",
+                table: "webhooks_config",
+                column: "tenant_id",
+                principalTable: "tenants_tenants",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_webhooks_logs_tenants_tenants_tenant_id",
+                table: "webhooks_logs",
+                column: "tenant_id",
+                principalTable: "tenants_tenants",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_webstudio_settings_tenants_tenants_TenantID",
+                table: "webstudio_settings",
+                column: "TenantID",
+                principalTable: "tenants_tenants",
+                principalColumn: "id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
+                name: "FK_webstudio_uservisit_tenants_tenants_tenantid",
+                table: "webstudio_uservisit",
+                column: "tenantid",
                 principalTable: "tenants_tenants",
                 principalColumn: "id",
                 onDelete: ReferentialAction.Cascade);

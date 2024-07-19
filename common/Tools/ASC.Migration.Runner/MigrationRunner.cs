@@ -93,6 +93,17 @@ public class MigrationRunner
 
         migrationContext.SaveChanges();
 
+        var queryFeed = from f in migrationContext.FeedUsers
+                    join fa in migrationContext.FeedAggregates on f.FeedId equals fa.Id into fa
+                    from mapping in fa.DefaultIfEmpty()
+                    select new
+                    {
+                        f = f,
+                        fa = mapping
+                    };
+
+        queryFeed.Where(q => q.fa == null).Select(q=> q.f).ExecuteDelete();
+
         var queryTree = from t in migrationContext.Tree
                         join f in migrationContext.Folders on t.FolderId equals f.Id into f
                         from mapping in f.DefaultIfEmpty()
