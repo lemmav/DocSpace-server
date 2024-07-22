@@ -125,30 +125,6 @@ namespace ASC.Migrations.MySql.SaaS.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_feed_aggregate_tenants_tenants_tenant",
-                table: "feed_aggregate",
-                column: "tenant",
-                principalTable: "tenants_tenants",
-                principalColumn: "id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_feed_readed_tenants_tenants_tenant_id",
-                table: "feed_readed",
-                column: "tenant_id",
-                principalTable: "tenants_tenants",
-                principalColumn: "id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_feed_users_feed_aggregate_feed_id",
-                table: "feed_users",
-                column: "feed_id",
-                principalTable: "feed_aggregate",
-                principalColumn: "id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
                 name: "FK_files_bunch_objects_tenants_tenants_tenant_id",
                 table: "files_bunch_objects",
                 column: "tenant_id",
@@ -407,18 +383,6 @@ namespace ASC.Migrations.MySql.SaaS.Migrations
             migrationBuilder.DropForeignKey(
                 name: "FK_event_bus_integration_event_log_tenants_tenants_tenant_id",
                 table: "event_bus_integration_event_log");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_feed_aggregate_tenants_tenants_tenant",
-                table: "feed_aggregate");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_feed_readed_tenants_tenants_tenant_id",
-                table: "feed_readed");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_feed_users_feed_aggregate_feed_id",
-                table: "feed_users");
 
             migrationBuilder.DropForeignKey(
                 name: "FK_files_bunch_objects_tenants_tenants_tenant_id",
