@@ -45,77 +45,8 @@ public class MigrationRunner
     public void RunApplyMigrations(string path, ProviderInfo dbProvider, ProviderInfo teamlabsiteProvider, ConfigurationInfo configurationInfo, string targetMigration)
     {
         var migrationContext = _dbContextActivator.CreateInstance(typeof(MigrationContext), dbProvider) as MigrationContext;
-        var query = from u in migrationContext.Users
-                join t in migrationContext.Tenants on u.TenantId equals t.Id into t
-                from mapping in t.DefaultIfEmpty()
-                select new
-                {
-                    u = u,
-                    t = mapping
-                };
-        var tenants = query.Where(q=> q.t == null).Select(q=> q.u.TenantId).Distinct().ToList();
-
-        foreach (var tenant in tenants)
-        {
-            var dbTenant = new DbTenant();
-            dbTenant.Id = tenant;
-            dbTenant.Alias = $"temp-{tenant}";
-            dbTenant.Version = 2;
-            dbTenant.Name = "";
-            dbTenant.Status = TenantStatus.Suspended;
-            dbTenant.LastModified = DateTime.Now;
-            migrationContext.Tenants.Add(dbTenant);
-        }
-
-        migrationContext.SaveChanges();
-
-        var queryRows = from q in migrationContext.QuotaRows
-                    join t in migrationContext.Tenants on q.TenantId equals t.Id into t
-                    from mapping in t.DefaultIfEmpty()
-                    select new
-                    {
-                        q = q,
-                        t = mapping
-                    };
-        tenants = queryRows.Where(q => q.t == null).Select(q => q.q.TenantId).Distinct().ToList();
-
-        foreach (var tenant in tenants)
-        {
-            var dbTenant = new DbTenant();
-            dbTenant.Id = tenant;
-            dbTenant.Alias = $"temp-{tenant}";
-            dbTenant.Version = 2;
-            dbTenant.Name = "";
-            dbTenant.Status = TenantStatus.Suspended;
-            dbTenant.LastModified = DateTime.Now;
-            migrationContext.Tenants.Add(dbTenant);
-        }
-
-        migrationContext.SaveChanges();
-
-        var queryTree = from t in migrationContext.Tree
-                        join f in migrationContext.Folders on t.FolderId equals f.Id into f
-                        from mapping in f.DefaultIfEmpty()
-                        select new
-                        {
-                            t = t,
-                            f = mapping
-                        };
-
-        queryTree.Where(q => q.f == null).Select(q => q.t).ExecuteDelete();
-
-        Migrate(migrationContext, targetMigration);
-
-       // var teamlabContext = _dbContextActivator.CreateInstance(typeof(TeamlabSiteContext), teamlabsiteProvider);
-       // Migrate(teamlabContext, targetMigration);
-
-        if (configurationInfo == ConfigurationInfo.Standalone)
-        {
-            migrationContext = _dbContextActivator.CreateInstance(typeof(MigrationContext), dbProvider, ConfigurationInfo.Standalone) as MigrationContext;
-            Migrate(migrationContext, targetMigration);
-        }
-
-        migrationContext.Tenants.Where(t=> tenants.Contains(t.Id)).ExecuteDelete();
+        
+        migrationContext.Tenants.Where(t=> t.Alias == $"temp-{t.Id}").ExecuteDelete();
         Console.WriteLine("Migrations applied");
     }
 
