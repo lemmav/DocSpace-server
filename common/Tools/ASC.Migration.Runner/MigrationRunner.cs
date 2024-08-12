@@ -46,7 +46,7 @@ public class MigrationRunner
     {
         var migrationContext = _dbContextActivator.CreateInstance(typeof(MigrationContext), dbProvider) as MigrationContext;
         
-        migrationContext.Tenants.Where(t=> t.Alias.StartsWith("temp-")).ExecuteDelete();
+        migrationContext.Tenants.Where(t=> t.Alias.Equals("temp-" + t.Id) && t.Status == TenantStatus.Suspended).ExecuteDelete();
         Console.WriteLine("Migrations applied");
     }
 
